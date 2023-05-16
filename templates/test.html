@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.2/d3.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.js"></script>
+</head>
+<body>
+    <div  id="rulesDiv" style="background: white; font-size:18px; font-family: Arial;"><span>Rules to be checked: <br/><br/></span></div>
+    <div style="width:90%;height:1000px;float:left;overflow-x: auto;">
+         <svg id="svg-teil" style="width:3800px;height:100%;"><g></g></svg>
+    </div>
+    <div id="listContainer" style="width:10%;height:1000px;float:right;">
+
+    </div>
+    <div id="tooltip_template"></div>
+    <script src="{{url_for('static', filename='scripts.js')}}" type="text/javascript"></script>
+</body>
+</html>

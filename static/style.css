@@ -1,0 +1,101 @@
+body {
+  font: 300 14px 'Helvetica Neue', Helvetica;
+  background: snow;
+}
+
+.node polygon,
+.node rect,
+.node circle {
+  rx: 5;
+  ry: 5;
+  stroke: black;
+  fill: khaki;
+}
+
+.node.qualify polygon {
+  stroke: darkgreen;
+  fill: khaki;
+  stroke-width: 2.5px;
+}
+
+.node.qualify rect,
+.node.qualify circle {
+  rx: 5;
+  ry: 5;
+  stroke: darkgreen;
+  fill: lightgreen;
+}
+
+.node.disqualify polygon{
+  stroke: darkred;
+  fill: khaki;
+  stroke-width: 2.5px;
+}
+
+.node.disqualify rect,
+.node.disqualify circle {
+  rx: 5;
+  ry: 5;
+  stroke: darkred;
+  fill: lightcoral;
+}
+
+.node.both polygon,
+.node.both rect,
+.node.both circle {
+  rx: 5;
+  ry: 5;
+  stroke: darkorange;
+  fill: darkorange;
+}
+
+.edgePath path {
+  stroke: #333;
+  fill: #333;
+  stroke-width: 1.5px;
+}
+
+.edgePath.disqualify path {
+  stroke: darkred;
+  fill: darkred;
+}
+
+.edgePath.qualify path {
+  stroke: green;
+  fill: green;
+}
+
+.node.disqualify .label{
+  fill: black;
+}
+
+.node.qualify .label{
+  fill: black;
+}
+
+.node .label{
+  fill: black;
+}
+
+
+
+/*#tooltip_template {*/
+/*  position: "absolute";*/
+/*}*/
+
+/*
+.node text {
+  pointer-events: none;
+}
+
+.tipsy .name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #60b1fc;
+  margin: 0;
+}
+
+.tipsy .description {
+  font-size: 1.2em;
+}
+*/
