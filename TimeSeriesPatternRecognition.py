@@ -1,28 +1,22 @@
 import datetime
 import json
-import os
-import pickle
+
 from clearml import Task, Dataset
 
 from tensorflow.keras.layers import TimeDistributed, LSTM, Reshape
-from tensorflow.keras.layers import ConvLSTM1D, BatchNormalization, MaxPooling2D
-from tensorflow.keras.models import Model
-from tensorflow.keras import Input
+
 from numpy.lib.stride_tricks import sliding_window_view
 
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv1D, Flatten, Dropout
 from tensorflow.keras.callbacks import TensorBoard
 
 import matplotlib.pyplot as plt
-import matplotlib
 from sklearn import preprocessing
-import glob
-import tensorflow.keras.backend as K
 import tensorflow_addons as tfa
 
 import os
@@ -83,7 +77,7 @@ cloned_task = Task.clone(source_task=task)
 Task.enqueue(task=cloned_task, queue_name='default')
 
 dataset = Dataset.get(dataset_id='0f33fe5cd9184810aae6ef041387552b')
-dataset_path = dataset.get_mutable_local_copy("DataBasesTmp/",True)
+dataset_path = dataset.get_mutable_local_copy("DataBasesTmp/", True)
 
 # Create a dataset with ClearML`s Dataset class
 dataset = Dataset.create(
