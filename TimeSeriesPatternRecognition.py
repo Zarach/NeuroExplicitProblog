@@ -82,9 +82,25 @@ task = Task.init(project_name='test project', task_name='first experiment')
 cloned_task = Task.clone(source_task=task)
 Task.enqueue(task=cloned_task, queue_name='default')
 
-dataset = Dataset.get(dataset_project='test_project', dataset_name='NeSy_Dataset')
+dataset = Dataset.get(dataset_id='0f33fe5cd9184810aae6ef041387552b')
+dataset_path = dataset.get_mutable_local_copy("DataBasesTmp/",True)
 
-df_power_consumption = Utils.load_csv_from_folder("DataBases/Barthi/power_consumption", "timestamp")[['smartMeter']]
+# Create a dataset with ClearML`s Dataset class
+dataset = Dataset.create(
+    dataset_project="NeSy", dataset_name="DataBases"
+)
+
+# add the example csv
+dataset.add_files(path="DataBases/")
+#dataset.sync_folder(local_path="DataBases/Barthi")
+
+# Upload dataset to ClearML server (customizable)
+dataset.upload()
+
+# commit dataset changes
+dataset.finalize()
+
+df_power_consumption = Utils.load_csv_from_folder(dataset_path+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
 
@@ -95,7 +111,7 @@ df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1
 
 
 # Pretraining Labels
-df_active_phase_all = Utils.load_csv_from_folder("DataBases/Barthi/active_phases", "timestamp")
+df_active_phase_all = Utils.load_csv_from_folder("DataBasesTmp/Barthi/active_phases", "timestamp")
 
 df_active_phase = pd.DataFrame()
 
@@ -261,7 +277,7 @@ for idx, value in enumerate(evalKettle.values):
         end = evalKettle.index[idx]
 
 script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-rel_path = "DataBases/Facts/facts_from_ml_sensors_precision_Test.json"
+rel_path = "DataBasesTmp/Facts/facts_from_ml_sensors_precision_Test.json"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 with open(abs_file_path, 'w') as facts_file:
