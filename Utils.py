@@ -13,6 +13,7 @@ def load_csv_from_folder(folder, index=None, axis=0):
 
     li = []
 
+
     for filename in all_files:
         if index is not None:
             df = pd.read_csv(filename, header=0, index_col=index, parse_dates=[index])
