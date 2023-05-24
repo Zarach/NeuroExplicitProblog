@@ -72,40 +72,44 @@ def create_dataset(dataset_X, dataset_Y, window_size=299):
     dataY[dataY > 10] = 1
     return dataX, dataY, index
 
-task = Task.init(project_name='test project', task_name='first experiment')
-cloned_task = Task.clone(source_task=task)
-Task.enqueue(task=cloned_task, queue_name='default')
+task = Task.init(project_name='NeSy', task_name='classificator training')
+# cloned_task = Task.clone(source_task=task)
+# Task.enqueue(task=cloned_task, queue_name='default')
+task.execute_remotely(queue_name="default")
 
-dataset = Dataset.get(dataset_id='0f33fe5cd9184810aae6ef041387552b')
-dataset_path = dataset.get_mutable_local_copy("DataBasesTmp/", True)
+dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases' )
+dataset_path_databases = dataset_databases.get_mutable_local_copy("DataBasesTmp/", True)
+
+dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results' )
+dataset_path_results = dataset_results.get_mutable_local_copy("ResultsTmp/", True)
 
 # Create a dataset with ClearML`s Dataset class
-dataset = Dataset.create(
-    dataset_project="NeSy", dataset_name="DataBases"
-)
+# dataset = Dataset.create(
+#     dataset_project="NeSy", dataset_name="Results"
+# )
+#
+# # add the example csv
+# dataset.add_files(path="Results/")
+# #dataset.sync_folder(local_path="DataBases/Barthi")
+#
+# # Upload dataset to ClearML server (customizable)
+# dataset.upload(chunk_size=100)
+#
+# # commit dataset changes
+# dataset.finalize()
 
-# add the example csv
-dataset.add_files(path="DataBases/")
-#dataset.sync_folder(local_path="DataBases/Barthi")
-
-# Upload dataset to ClearML server (customizable)
-dataset.upload()
-
-# commit dataset changes
-dataset.finalize()
-
-df_power_consumption = Utils.load_csv_from_folder(dataset_path+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
+df_power_consumption = Utils.load_csv_from_folder(dataset_path_databases+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
 
 # Finetuning Labels
-df_active_phase_all = Utils.load_csv_from_folder("Results", "timestamp")
+df_active_phase_all = Utils.load_csv_from_folder(dataset_path_results, "timestamp")
 df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
 #df_active_phase_plausibility = df_active_phase_all.fillna(0)
 
 
 # Pretraining Labels
-df_active_phase_all = Utils.load_csv_from_folder("DataBasesTmp/Barthi/active_phases", "timestamp")
+df_active_phase_all = Utils.load_csv_from_folder(dataset_path_databases+"/Barthi/active_phases", "timestamp")
 
 df_active_phase = pd.DataFrame()
 
@@ -209,6 +213,8 @@ if finetune:
 
 modelKettle.summary()
 
+
+
 if not load or finetune:
     modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
     modelKettle.save_weights("model_test.h5")
@@ -235,7 +241,7 @@ facts = []
 
 evalKettle[evalKettle < threshold] = 0
 script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-rel_path = "Results/evaluation_nn_Test.csv"
+rel_path = "ResultsTmp/evaluation_nn_Test.csv"
 abs_file_path = os.path.join(script_dir, rel_path)
 
 evalKettle.to_csv(abs_file_path)
