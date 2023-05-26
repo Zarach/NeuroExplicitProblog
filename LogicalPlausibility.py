@@ -142,7 +142,7 @@ class LogicalPlausibility:
         #rules = ' '.join(str(e) for e in rules_list)
         return rules_list
 
-    def load_facts(self, file='facts.json', start="1000-01-01 00:00:00", end="9999-12-31 23:59:59", database_root):
+    def load_facts(self, database_root, file='facts.json', start="1000-01-01 00:00:00", end="9999-12-31 23:59:59"):
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
         rel_path = f"{database_root}/Facts/{file}"
         abs_file_path = os.path.join(script_dir, rel_path)
@@ -213,7 +213,7 @@ class LogicalPlausibility:
     def check_plausibility(self, experiment_number, period_start="2023-03-13 00:00:00", period_end="2023-03-26 23:59:59", database_root="DataBases", results_root="Results", test=True):
         rules_list = []
         rules = self.load_rules("rules_manual.json")
-        facts_string, fact_list = self.load_facts(f'facts_from_ml_sensors_finetuned_{experiment_number}.json', "2023-03-13 00:00:00", "2023-03-26 23:59:59", database_root)
+        facts_string, fact_list = self.load_facts(database_root, f'facts_from_ml_sensors_finetuned_{experiment_number}.json', "2023-03-13 00:00:00", "2023-03-26 23:59:59")
         facts_string += self.grounding(grounding_rule='act(A) :- kettle(A).', grounding_facts=facts_string) # ; coffee(A); washing_machine(A); microwave(A); toaster(A); television(A).
         facts_string += self.grounding(grounding_rule='duration(A, B) :- start(A,C), get_stamp(C, D), end(A,E), get_stamp(E, F), B is F-D.', grounding_facts=facts_string)
         facts_string += self.grounding(grounding_rule='weekday(A, B) :- start(A,C), get_weekday(C, B).', grounding_facts=facts_string)
