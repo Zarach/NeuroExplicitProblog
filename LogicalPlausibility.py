@@ -234,7 +234,7 @@ class LogicalPlausibility:
 
 
             df_active_phase = Utils.load_csv_from_folder(f"{database_root}/Barthi/active_phases", "timestamp")[['kettle']]
-            df_active_phase = df_active_phase.loc[period_start, period_end]
+            df_active_phase = df_active_phase.loc[period_start:period_end]
             pd.to_datetime(df_active_phase.index)
 
             df_eval = pd.concat([df, df_active_phase], axis=1).fillna(0)
