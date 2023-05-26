@@ -25,9 +25,9 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--experiment_number', type=str, default='I', metavar='N',
                         help='input batch size for training (default: 64)')
-parser.add_argument('--period_start', type=str, default="2023-03-13 00:00:00", metavar='N',
+parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
                         help='input batch size for training (default: 64)')
-parser.add_argument('--period_end', type=str, default="2023-03-26 23:59:59", metavar='N',
+parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
                         help='input batch size for training (default: 64)')
 
 args = parser.parse_args()
