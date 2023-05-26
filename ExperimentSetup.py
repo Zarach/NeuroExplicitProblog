@@ -10,6 +10,18 @@ import os
 
 from clearml import Task, Dataset
 
+# dataset = Dataset.create(
+#     dataset_project="NeSy", dataset_name="Results"
+# )
+#
+# # add the example csv
+# dataset.add_files(path="Results/")
+#
+# dataset.upload(chunk_size=100)
+#
+# # commit dataset changes
+# dataset.finalize()
+
 task = Task.init(project_name='NeSy', task_name='Experiment Test (Logical)')
 # cloned_task = Task.clone(source_task=task)
 # Task.enqueue(task=cloned_task, queue_name='default')
@@ -42,3 +54,6 @@ lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
 dataset_results.sync_folder("Results/")
+
+# commit dataset changes
+dataset_results.finalize()
