@@ -16,10 +16,14 @@ task.execute_remotely(queue_name="default")
 
 import LogicalPlausibility
 
-parser = argparse.ArgumentParser(
-                    experiment_number=0,
-                    period_start="2023-03-13 00:00:00",
-                    period_end="2023-03-26 23:59:59")
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--experiment_number', type=int, default=0, metavar='N',
+                        help='input batch size for training (default: 64)')
+parser.add_argument('--period_start', type=str, default="2023-03-13 00:00:00", metavar='N',
+                        help='input batch size for training (default: 64)')
+parser.add_argument('--period_end', type=str, default="2023-03-26 23:59:59", metavar='N',
+                        help='input batch size for training (default: 64)')
 
 args = parser.parse_args()
 
