@@ -6,6 +6,7 @@
 # Test VI: "2023-02-27 00:00:00", "2023-03-12 23:59:59"
 # Test VII: "2023-03-13 00:00:00", "2023-03-26 23:59:59"
 import argparse
+import os
 
 from clearml import Task, Dataset
 
@@ -13,6 +14,10 @@ task = Task.init(project_name='NeSy', task_name='Experiment Test (Logical)')
 # cloned_task = Task.clone(source_task=task)
 # Task.enqueue(task=cloned_task, queue_name='default')
 task.execute_remotely(queue_name="default")
+
+os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
+
+f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
 
 import LogicalPlausibility
 
