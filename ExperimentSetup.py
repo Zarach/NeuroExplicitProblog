@@ -41,4 +41,4 @@ dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
-dataset_results.sync_folder()
+dataset_results.sync_folder("Results/", "Results/")
