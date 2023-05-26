@@ -18,7 +18,7 @@ import LogicalPlausibility
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=int, default=0, metavar='N',
+parser.add_argument('--experiment_number', type=str, default='I', metavar='N',
                         help='input batch size for training (default: 64)')
 parser.add_argument('--period_start', type=str, default="2023-03-13 00:00:00", metavar='N',
                         help='input batch size for training (default: 64)')
