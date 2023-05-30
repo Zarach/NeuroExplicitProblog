@@ -97,6 +97,7 @@ class TimeSeriesPatternRecognition():
     # # commit dataset changes
     # dataset.finalize()
 
+
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results"):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
