@@ -238,13 +238,13 @@ class LogicalPlausibility:
             pd.to_datetime(df_active_phase.index)
 
             df_eval = pd.concat([df, df_active_phase], axis=1).fillna(0)
-            df_eval = df_eval.rename(columns={'': 'timestamp', 'Val': "plausibility", 'kettle': "ground truth"})
+            df_eval = df_eval.rename(columns={'Val': "plausibility", 'kettle': "ground truth"})
 
             script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
             rel_path = f"{results_root}/evaluation_plausibility_manual_{experiment_number}.csv"
             abs_file_path = os.path.join(script_dir, rel_path)
 
-            df_eval.to_csv(abs_file_path)
+            df_eval.to_csv(abs_file_path, header=['timestamp', 'plausibility', 'kettle'])
 
 
             f1 = f1_score(df_eval.loc[:,'ground truth'], df_eval.loc[:,'plausibility'])
