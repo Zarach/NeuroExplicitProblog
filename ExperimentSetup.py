@@ -10,6 +10,8 @@ import os
 
 from clearml import Task, Dataset
 
+import TimeSeriesPatternRecognition
+
 # dataset = Dataset.create(
 #     dataset_project="NeSy", dataset_name="Results"
 # )
@@ -52,6 +54,9 @@ dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
+
+tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
+tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Results"

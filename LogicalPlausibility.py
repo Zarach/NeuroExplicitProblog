@@ -210,7 +210,7 @@ class LogicalPlausibility:
     # Test VI: "2023-02-27 00:00:00", "2023-03-12 23:59:59"
     # Test VII: "2023-03-13 00:00:00", "2023-03-26 23:59:59"
 
-    def check_plausibility(self, experiment_number, period_start="2023-03-13 00:00:00", period_end="2023-03-26 23:59:59", database_root="DataBases", results_root="Results", test=True):
+    def check_plausibility(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", test=True):
         print(period_start + ' - ' + period_end)
         self.rules_list = []
         rules = self.load_rules("rules_manual.json")
