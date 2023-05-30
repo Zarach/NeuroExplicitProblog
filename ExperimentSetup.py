@@ -56,6 +56,14 @@ dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
+dataset = Dataset.create(
+         dataset_project="NeSy", dataset_name="Results"
+    )
+dataset.add_files(path='Results/')
+dataset.upload(chunk_size=100)
+dataset.finalize()
+
+
 tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
 tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
