@@ -8,7 +8,8 @@
 import argparse
 import os
 
-from clearml import Task, Dataset
+from clearml import Task, Dataset, InputModel
+from tensorflow.keras.models import Sequential
 
 # dataset = Dataset.create(
 #     dataset_project="NeSy", dataset_name="Results"
@@ -21,6 +22,7 @@ from clearml import Task, Dataset
 #
 # # commit dataset changes
 # dataset.finalize()
+
 
 task = Task.init(project_name='NeSy', task_name='Experiment Test (Logical)')
 # cloned_task = Task.clone(source_task=task)
