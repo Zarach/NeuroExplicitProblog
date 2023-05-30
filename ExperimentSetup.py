@@ -53,7 +53,7 @@ dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
-dataset_results.update_changed_files()
+dataset_results.add_files(path='Results/')
 dataset_results.upload(chunk_size=100)
 dataset_results.finalize()
 
