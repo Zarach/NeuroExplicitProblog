@@ -10,8 +10,6 @@ import os
 
 from clearml import Task, Dataset
 
-import TimeSeriesPatternRecognition
-
 # dataset = Dataset.create(
 #     dataset_project="NeSy", dataset_name="Results"
 # )
@@ -34,6 +32,7 @@ os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.
 f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
 
 import LogicalPlausibility
+import TimeSeriesPatternRecognition
 
 parser = argparse.ArgumentParser()
 
