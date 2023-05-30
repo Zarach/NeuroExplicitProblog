@@ -238,7 +238,7 @@ class LogicalPlausibility:
             pd.to_datetime(df_active_phase.index)
 
             df_eval = pd.concat([df, df_active_phase], axis=1).fillna(0)
-            df_eval = df_eval.rename(columns={'Val': "timestamp", 'kettle': "plausibility"})
+            df_eval = df_eval.rename(columns={'': 'timestamp', 'Val': "plausibility", 'kettle': "ground truth"})
 
             script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
             rel_path = f"{results_root}/evaluation_plausibility_manual_{experiment_number}.csv"
@@ -247,9 +247,9 @@ class LogicalPlausibility:
             df_eval.to_csv(abs_file_path)
 
 
-            f1 = f1_score(df_eval.loc[:,'kettle'], df_eval.loc[:,'Val'])
-            recall = recall_score(df_eval.loc[:,'kettle'], df_eval.loc[:,'Val'], )
-            precision = precision_score(df_eval.loc[:, 'kettle'], df_eval.loc[:, 'Val'])
+            f1 = f1_score(df_eval.loc[:,'ground truth'], df_eval.loc[:,'plausibility'])
+            recall = recall_score(df_eval.loc[:,'ground truth'], df_eval.loc[:,'plausibility'], )
+            precision = precision_score(df_eval.loc[:, 'ground truth'], df_eval.loc[:, 'plausibility'])
 
             print('F1: ' + str(f1))
             print('Recall: ' + str(recall))
