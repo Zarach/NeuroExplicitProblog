@@ -243,7 +243,7 @@ class TimeSeriesPatternRecognition():
 
         evalKettle[evalKettle < threshold] = 0
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        rel_path = f"ResultsTmp/evaluation_nn_{experiment_number}.csv"
+        rel_path = f"{results_root}/evaluation_nn_{experiment_number}.csv"
         abs_file_path = os.path.join(script_dir, rel_path)
 
         evalKettle.to_csv(abs_file_path)
@@ -279,7 +279,7 @@ class TimeSeriesPatternRecognition():
                 end = evalKettle.index[idx]
 
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        rel_path = "DataBasesTmp/Facts/facts_from_ml_sensors_precision_Test.json"
+        rel_path = f"{database_root}/Facts/facts_from_ml_sensors_precision_Test.json"
         abs_file_path = os.path.join(script_dir, rel_path)
 
         with open(abs_file_path, 'w') as facts_file:
