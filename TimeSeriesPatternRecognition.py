@@ -62,7 +62,7 @@ class TimeSeriesPatternRecognition():
         model.add(Dense(1, activation='sigmoid'))
         return model
 
-    def create_dataset(dataset_X, dataset_Y, window_size=299):
+    def create_dataset(self, dataset_X, dataset_Y, window_size=299):
         gap = int((window_size-1)/2)
         dataX, dataY = [], []
         # for i in range(len(dataset_X)-window_size-1):
