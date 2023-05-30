@@ -36,11 +36,11 @@ import LogicalPlausibility
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--experiment_number', type=str, default='I', metavar='N',
-                        help='input batch size for training (default: 64)')
+                        help='Experiment Number in roman numbers (default I)')
 parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
-                        help='input batch size for training (default: 64)')
+                        help='Start Date')
 parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
-                        help='input batch size for training (default: 64)')
+                        help='End Date')
 
 args = parser.parse_args()
 
@@ -53,9 +53,12 @@ dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
-dataset_results.add_files(path='Results/')
-dataset_results.upload(chunk_size=100)
-dataset_results.finalize()
+dataset = Dataset.create(
+         dataset_project="NeSy", dataset_name="Results"
+    )
+dataset.add_files(path='Results/')
+dataset.upload(chunk_size=100)
+dataset.finalize()
 
 # commit dataset changes
 #dataset_results.finalize()
