@@ -244,7 +244,7 @@ class LogicalPlausibility:
             rel_path = f"{results_root}/evaluation_plausibility_manual_{experiment_number}.csv"
             abs_file_path = os.path.join(script_dir, rel_path)
 
-            df_eval.to_csv(abs_file_path, header=['plausibility', 'kettle'])
+            df_eval.to_csv(abs_file_path, header=['plausibility', 'ground truth'])
 
 
             f1 = f1_score(df_eval.loc[:,'ground truth'], df_eval.loc[:,'plausibility'])
