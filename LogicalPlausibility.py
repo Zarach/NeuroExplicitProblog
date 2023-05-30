@@ -238,7 +238,7 @@ class LogicalPlausibility:
             pd.to_datetime(df_active_phase.index)
 
             df_eval = pd.concat([df, df_active_phase], axis=1).fillna(0)
-            df_eval = df_eval.rename(index={0: "timestamp", 1: "plausibility"})
+            df_eval = df_eval.rename(columns={'Val': "timestamp", 'kettle': "plausibility"})
 
             script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
             rel_path = f"{results_root}/evaluation_plausibility_manual_{experiment_number}.csv"
