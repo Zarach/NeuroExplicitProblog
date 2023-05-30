@@ -24,7 +24,7 @@ from tensorflow.keras.models import Sequential
 # dataset.finalize()
 
 
-task = Task.init(project_name='NeSy', task_name='Experiment Test (Logical)')
+task = Task.init(project_name='NeSy', task_name='Experiment Test (Neurosymbolic)')
 # cloned_task = Task.clone(source_task=task)
 # Task.enqueue(task=cloned_task, queue_name='default')
 task.execute_remotely(queue_name="default")
