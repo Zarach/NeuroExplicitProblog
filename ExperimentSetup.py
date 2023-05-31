@@ -49,7 +49,7 @@ parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", met
 args = parser.parse_args()
 roman_number = roman.toRoman(int(args.experiment_number)-1)
 print(roman_number)
-model = Model.query_models(project_name='NeSy', model_name=f'model_finetuned_{roman_number}').get_weights()
+model = Model.query_models(project_name='NeSy', model_name=f'model_finetuned_{roman_number}')[0].get_weights()
 
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases' )
