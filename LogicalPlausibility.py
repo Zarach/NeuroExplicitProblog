@@ -1,3 +1,4 @@
+import roman
 from sklearn.metrics import f1_score, recall_score, precision_score
 from problog import get_evaluatable
 from problog.formula import LogicFormula, Term
@@ -214,7 +215,7 @@ class LogicalPlausibility:
         print(period_start + ' - ' + period_end)
         self.rules_list = []
         rules = self.load_rules("rules_manual.json")
-        facts_string, fact_list = self.load_facts(database_root, f'facts_from_ml_sensors_finetuned_{experiment_number}.json', period_start, period_end)
+        facts_string, fact_list = self.load_facts(database_root, f'facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number)}.json', period_start, period_end)
         print(facts_string)
         facts_string += self.grounding(grounding_rule='act(A) :- kettle(A).', grounding_facts=facts_string) # ; coffee(A); washing_machine(A); microwave(A); toaster(A); television(A).
         facts_string += self.grounding(grounding_rule='duration(A, B) :- start(A,C), get_stamp(C, D), end(A,E), get_stamp(E, F), B is F-D.', grounding_facts=facts_string)
@@ -241,7 +242,7 @@ class LogicalPlausibility:
             df_eval = df_eval.rename(columns={'Val': "plausibility", 'kettle': "ground truth"})
 
             script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-            rel_path = f"{results_root}/evaluation_plausibility_manual_{experiment_number}.csv"
+            rel_path = f"{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number)}.csv"
             abs_file_path = os.path.join(script_dir, rel_path)
 
             df_eval.to_csv(abs_file_path, header=['plausibility', 'ground truth'])

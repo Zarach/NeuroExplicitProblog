@@ -1,6 +1,7 @@
 import datetime
 import json
 
+import roman
 from clearml import Task, Dataset
 
 #task = Task.init(project_name='NeSy', task_name='classificator training')
@@ -98,7 +99,7 @@ class TimeSeriesPatternRecognition():
     # dataset.finalize()
 
 
-    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results"):
+    def run(self, model, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results"):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
@@ -198,17 +199,18 @@ class TimeSeriesPatternRecognition():
         #Kettle
         class_weight = {0: 1.,
                         1: 5.}
-        modelKettle = self.create_model()
+        # modelKettle = self.create_model()
 
         load = True
         finetune = True
 
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
-        modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
+        # modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
         if load:
-            modelKettle.load_weights("Models/model.h5")
+            # modelKettle.load_weights("Models/model.h5")
+            modelKettle = model
         if finetune:
             for layer in modelKettle.layers[:5]:
                 layer.trainable = False
@@ -219,7 +221,7 @@ class TimeSeriesPatternRecognition():
 
         if not load or finetune:
             modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
-            modelKettle.save_weights(f"Models/model_finetuned_{experiment_number}.h5")
+            modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         print(modelKettle.evaluate(test_X_time, test_y_time))
         evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)

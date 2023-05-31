@@ -8,7 +8,8 @@
 import argparse
 import os
 
-from clearml import Task, Dataset, InputModel
+import roman
+from clearml import Task, Dataset, InputModel, Model
 from tensorflow.keras.models import Sequential
 
 # dataset = Dataset.create(
@@ -38,7 +39,7 @@ import TimeSeriesPatternRecognition
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=str, default='I', metavar='N',
+parser.add_argument('--experiment_number', type=str, default='2', metavar='N',
                         help='Experiment Number in roman numbers (default I)')
 parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
                         help='Start Date')
@@ -46,6 +47,9 @@ parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", met
                         help='End Date')
 
 args = parser.parse_args()
+
+model = Model.query_models(project_name='NeSy', model_name=f'model_finetuned_{roman.toRoman(args.experiment_number-1)}').get_weights()
+
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases' )
 dataset_path_databases = dataset_databases.get_mutable_local_copy("DataBases/", True)
@@ -65,7 +69,7 @@ dataset.finalize()
 
 
 tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
+tspr.run(model, args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Results"
