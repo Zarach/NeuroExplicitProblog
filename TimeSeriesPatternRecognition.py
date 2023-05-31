@@ -105,7 +105,7 @@ class TimeSeriesPatternRecognition():
 
 
         # Finetuning Labels
-        df_active_phase_all = pd.read_csv(f'{results_root}/evaluation_plausibility_manual_{experiment_number}.csv', header=0, index_col=0, parse_dates=[0])
+        df_active_phase_all = pd.read_csv(f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number)}.csv', header=0, index_col=0, parse_dates=[0])
         df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
         #df_active_phase_plausibility = df_active_phase_all.fillna(0)
 
@@ -245,7 +245,7 @@ class TimeSeriesPatternRecognition():
 
         evalKettle[evalKettle < threshold] = 0
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        rel_path = f"{results_root}/evaluation_nn_{experiment_number}.csv"
+        rel_path = f"{results_root}/evaluation_nn_{roman.toRoman(experiment_number)}.csv"
         abs_file_path = os.path.join(script_dir, rel_path)
 
         evalKettle.to_csv(abs_file_path)

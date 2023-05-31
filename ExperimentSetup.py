@@ -39,7 +39,7 @@ import TimeSeriesPatternRecognition
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=str, default='2', metavar='N',
+parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
                         help='Experiment Number in roman numbers (default I)')
 parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
                         help='Start Date')
