@@ -40,10 +40,10 @@ import TimeSeriesPatternRecognition
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
-                        help='Experiment Number in roman numbers (default I)')
-parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
+                        help='Experiment Number')
+parser.add_argument('--period_start', type=str, default="2023-01-16 00:00:00", metavar='N',
                         help='Start Date')
-parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
+parser.add_argument('--period_end', type=str, default="2023-01-29 23:59:59", metavar='N',
                         help='End Date')
 parser.add_argument('--model_id', type=str, default="fea45e2128294960bc629ef78dbcd044", metavar='N',
                         help='ID of the model')
@@ -51,13 +51,13 @@ parser.add_argument('--model_id', type=str, default="fea45e2128294960bc629ef78db
 args = parser.parse_args()
 roman_number = roman.toRoman(int(args.experiment_number)-1)
 print(roman_number)
-model = Model(args.model_id).get_weights()
+model = Model(args.model_id).get_local_copy()
 
 
-dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases' )
+dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
 dataset_path_databases = dataset_databases.get_mutable_local_copy("DataBases/", True)
 
-dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results' )
+dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results')
 dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 
 lp = LogicalPlausibility.LogicalPlausibility()
