@@ -45,11 +45,13 @@ parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", m
                         help='Start Date')
 parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
                         help='End Date')
+parser.add_argument('--model_id', type=str, default="fea45e2128294960bc629ef78dbcd044", metavar='N',
+                        help='ID of the model')
 
 args = parser.parse_args()
 roman_number = roman.toRoman(int(args.experiment_number)-1)
 print(roman_number)
-model = Model.query_models(project_name='NeSy', model_name=f'model_finetuned_{roman_number}')[0].get_weights()
+model = Model(args.model_id).get_weights()
 
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases' )
