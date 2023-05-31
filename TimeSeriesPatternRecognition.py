@@ -219,7 +219,7 @@ class TimeSeriesPatternRecognition():
 
         if not load or finetune:
             modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
-            modelKettle.save_weights("Models/model_test.h5")
+            modelKettle.save_weights(f"Models/model_finetuned_{experiment_number}.h5")
 
         print(modelKettle.evaluate(test_X_time, test_y_time))
         evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
