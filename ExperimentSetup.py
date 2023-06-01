@@ -39,11 +39,11 @@ import TimeSeriesPatternRecognition
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
                         help='Experiment Number')
-parser.add_argument('--period_start', type=str, default="2023-01-16 00:00:00", metavar='N',
+parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
                         help='Start Date')
-parser.add_argument('--period_end', type=str, default="2023-01-29 23:59:59", metavar='N',
+parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
                         help='End Date')
 parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
                         help='ID of the model')
@@ -59,6 +59,9 @@ dataset_path_databases = dataset_databases.get_mutable_local_copy("DataBases/", 
 dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results')
 dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 
+models = Dataset.get(dataset_project='NeSy', dataset_name='Models')
+models_path = dataset_results.get_mutable_local_copy("Models/", True)
+
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
 
@@ -72,7 +75,7 @@ print("Logic results uploaded.")
 
 
 tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, '') #model_path)
+tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Results"
