@@ -99,7 +99,7 @@ class TimeSeriesPatternRecognition():
     # dataset.finalize()
 
 
-    def run(self, model, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results"):
+    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", model_path=''):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
@@ -221,7 +221,7 @@ class TimeSeriesPatternRecognition():
 
         if not load or finetune:
             modelKettle.fit(train_X_time, train_y_time, epochs=1, class_weight=class_weight, callbacks=[tensorboard_callback])
-            modelKettle.save(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
+            modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         print(modelKettle.evaluate(test_X_time, test_y_time))
         evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)

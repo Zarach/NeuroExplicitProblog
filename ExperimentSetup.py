@@ -72,12 +72,19 @@ dataset.finalize()
 
 
 tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-tspr.run(model, args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
+tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, '') #model_path)
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Results"
     )
 dataset.add_files(path='Results/')
+dataset.upload(chunk_size=100)
+dataset.finalize()
+
+dataset = Dataset.create(
+         dataset_project="NeSy", dataset_name="Models"
+    )
+dataset.add_files(path='Models/')
 dataset.upload(chunk_size=100)
 dataset.finalize()
 
