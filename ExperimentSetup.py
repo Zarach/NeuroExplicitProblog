@@ -51,7 +51,7 @@ parser.add_argument('--model_id', type=str, default="fea45e2128294960bc629ef78db
 args = parser.parse_args()
 roman_number = roman.toRoman(int(args.experiment_number)-1)
 print(roman_number)
-model = Model(args.model_id).get_weights(raise_on_error=True, force_download=False)
+model = Model(args.model_id).get_weights(raise_on_error=False, force_download=False)
 
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
