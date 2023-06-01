@@ -68,6 +68,7 @@ dataset = Dataset.create(
 dataset.add_files(path='Results/')
 dataset.upload(chunk_size=100)
 dataset.finalize()
+print("Logic results uploaded.")
 
 
 tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
@@ -79,6 +80,7 @@ dataset = Dataset.create(
 dataset.add_files(path='Results/')
 dataset.upload(chunk_size=100)
 dataset.finalize()
+print("Neuro results uploaded.")
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Models"
@@ -86,6 +88,7 @@ dataset = Dataset.create(
 dataset.add_files(path='Models/')
 dataset.upload(chunk_size=100)
 dataset.finalize()
+print("Models uploaded.")
 
 # commit dataset changes
 #dataset_results.finalize()
