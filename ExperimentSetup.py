@@ -45,13 +45,13 @@ parser.add_argument('--period_start', type=str, default="2023-01-16 00:00:00", m
                         help='Start Date')
 parser.add_argument('--period_end', type=str, default="2023-01-29 23:59:59", metavar='N',
                         help='End Date')
-parser.add_argument('--model_id', type=str, default="fea45e2128294960bc629ef78dbcd044", metavar='N',
+parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
                         help='ID of the model')
 
 args = parser.parse_args()
 roman_number = roman.toRoman(int(args.experiment_number)-1)
 print(roman_number)
-model = Model(args.model_id).get_weights(raise_on_error=False, force_download=False)
+model = Model(args.model_id).get_local_copy()
 
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
