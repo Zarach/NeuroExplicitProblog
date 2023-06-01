@@ -39,11 +39,11 @@ import TimeSeriesPatternRecognition
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
                         help='Experiment Number')
-parser.add_argument('--period_start', type=str, default="2023-01-02 00:00:00", metavar='N',
+parser.add_argument('--period_start', type=str, default="2023-01-16 00:00:00", metavar='N',
                         help='Start Date')
-parser.add_argument('--period_end', type=str, default="2023-01-15 23:59:59", metavar='N',
+parser.add_argument('--period_end', type=str, default="2023-01-29 23:59:59", metavar='N',
                         help='End Date')
 parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
                         help='ID of the model')

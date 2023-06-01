@@ -209,7 +209,7 @@ class TimeSeriesPatternRecognition():
         modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
         if load:
-            modelKettle.load_weights(f"{models_path}/model.h5")
+            modelKettle.load_weights(f"{models_path}/model_finetuned_{roman.toRoman(experiment_number-1)}.h5")
             # modelKettle = model
         if finetune:
             for layer in modelKettle.layers[:5]:
