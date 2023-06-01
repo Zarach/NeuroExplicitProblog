@@ -60,7 +60,7 @@ dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results')
 dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 
 models = Dataset.get(dataset_project='NeSy', dataset_name='Models')
-models_path = dataset_results.get_mutable_local_copy("Models/", True)
+models_path = models.get_mutable_local_copy("Models/", True)
 
 lp = LogicalPlausibility.LogicalPlausibility()
 lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, models_path)
