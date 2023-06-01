@@ -199,18 +199,18 @@ class TimeSeriesPatternRecognition():
         #Kettle
         class_weight = {0: 1.,
                         1: 5.}
-        # modelKettle = self.create_model()
+        modelKettle = self.create_model()
 
         load = True
         finetune = True
 
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
-        # modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
+        modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
         if load:
-            # modelKettle.load_weights("Models/model.h5")
-            modelKettle = model
+            modelKettle.load_weights("Models/model.h5")
+            # modelKettle = model
         if finetune:
             for layer in modelKettle.layers[:5]:
                 layer.trainable = False
