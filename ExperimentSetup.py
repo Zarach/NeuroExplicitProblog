@@ -63,7 +63,7 @@ models = Dataset.get(dataset_project='NeSy', dataset_name='Models')
 models_path = dataset_results.get_mutable_local_copy("Models/", True)
 
 lp = LogicalPlausibility.LogicalPlausibility()
-lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results)
+lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, models_path)
 
 dataset = Dataset.create(
          dataset_project="NeSy", dataset_name="Results"

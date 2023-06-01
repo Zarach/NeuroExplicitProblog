@@ -99,7 +99,7 @@ class TimeSeriesPatternRecognition():
     # dataset.finalize()
 
 
-    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", model_path=''):
+    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path=''):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
@@ -209,7 +209,7 @@ class TimeSeriesPatternRecognition():
         modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
         if load:
-            modelKettle.load_weights("Models/model.h5")
+            modelKettle.load_weights(f"{models_path}/model.h5")
             # modelKettle = model
         if finetune:
             for layer in modelKettle.layers[:5]:
