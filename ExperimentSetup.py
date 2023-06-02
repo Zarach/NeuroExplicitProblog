@@ -93,7 +93,7 @@ period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:
 
 experiment_number = 2
 
-for i in range(2):
+for i in range(experiment_number-1):
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
         days=14)).strftime("%Y-%m-%d %H:%M:%S")
     period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
