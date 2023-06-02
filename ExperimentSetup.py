@@ -37,11 +37,11 @@ for i in range(2, 11):
     period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
         days=14)).strftime("%Y-%m-%d %H:%M:%S")
 
-    CML.parser.add_argument('--experiment_number', type=int, default=i, metavar='N',
+    parser.add_argument('--experiment_number', type=int, default=i, metavar='N',
                             help='Experiment Number')
-    CML.parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
+    parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
                             help='Start Date')
-    CML.parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
+    parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
                             help='End Date')
     # parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
     #                         help='ID of the model')
