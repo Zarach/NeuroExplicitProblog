@@ -46,7 +46,7 @@ for i in range(2, 11):
     # parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
     #                         help='ID of the model')
 
-    CML.start_task(i)
+    CML.start_task(i, True)
 
     while CML.task.get_progress() != 100:
         time.sleep(30)
