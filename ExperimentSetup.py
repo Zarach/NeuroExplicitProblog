@@ -10,6 +10,7 @@
 import time
 import datetime
 import CML
+import argparse
 
 # dataset = Dataset.create(
 #     dataset_project="NeSy", dataset_name="DataBases"
@@ -26,7 +27,9 @@ import CML
 # # commit dataset changes
 # dataset.finalize()
 
-
+parser = argparse.ArgumentParser()
+period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
+period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
 
 for i in range(2, 11):
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
