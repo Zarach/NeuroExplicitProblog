@@ -24,6 +24,17 @@ from tensorflow.keras.models import Sequential
 # # commit dataset changes
 # dataset.finalize()
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
+                        help='Experiment Number')
+parser.add_argument('--period_start', type=str, default="2022-12-19 00:00:00", metavar='N',
+                        help='Start Date')
+parser.add_argument('--period_end', type=str, default="2023-01-01 23:59:59", metavar='N',
+                        help='End Date')
+# parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
+#                         help='ID of the model')
+
 
 task = Task.init(project_name='NeSy', task_name='Experiment Test (Neurosymbolic)')
 # cloned_task = Task.clone(source_task=task)
@@ -37,20 +48,9 @@ f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/
 import LogicalPlausibility
 import TimeSeriesPatternRecognition
 
-parser = argparse.ArgumentParser()
 
-parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
-                        help='Experiment Number')
-parser.add_argument('--period_start', type=str, default="2023-01-16 00:00:00", metavar='N',
-                        help='Start Date')
-parser.add_argument('--period_end', type=str, default="2023-01-29 23:59:59", metavar='N',
-                        help='End Date')
-parser.add_argument('--model_id', type=str, default="a18b1937a7f349ff859095f4902bd270", metavar='N',
-                        help='ID of the model')
 
 args = parser.parse_args()
-roman_number = roman.toRoman(int(args.experiment_number)-1)
-print(roman_number)
 
 
 dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')

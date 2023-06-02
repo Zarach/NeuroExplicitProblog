@@ -105,7 +105,7 @@ class TimeSeriesPatternRecognition():
 
 
         # Finetuning Labels
-        df_active_phase_all = pd.read_csv(f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number)}.csv', header=0, index_col=0, parse_dates=[0])
+        df_active_phase_all = pd.read_csv(f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number-1)}.csv', header=0, index_col=0, parse_dates=[0])
         df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
         #df_active_phase_plausibility = df_active_phase_all.fillna(0)
 
