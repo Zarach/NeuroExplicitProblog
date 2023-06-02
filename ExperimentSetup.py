@@ -27,7 +27,9 @@ from tensorflow.keras.models import Sequential
 # dataset.upload(chunk_size=100)
 #
 # # commit dataset changes
-# dataset.finalize()
+# dataset.finalize
+
+
 
 def start_task():
     global task
@@ -43,9 +45,6 @@ def start_task():
     import LogicalPlausibility
     import TimeSeriesPatternRecognition
 
-
-
-    args = parser.parse_args()
 
 
     dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
@@ -107,6 +106,8 @@ parser.add_argument('--period_start', type=str, default=period_start, metavar='N
                         help='Start Date')
 parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
                         help='End Date')
+
+args = parser.parse_args()
 
 start_task()
 
