@@ -6,7 +6,8 @@ import os
 def start_task(i, local=False):
     global task
     global parser
-    task = Task.create(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {i}')
+    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {i}')
+    task.mark_stopped()
     # cloned_task = Task.clone(source_task=task)
     Task.enqueue(task=task, queue_name='default')
     # task.execute_remotely(queue_name='default', clone=True, exit_process=True)
