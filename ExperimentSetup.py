@@ -34,7 +34,7 @@ def start_task():
     task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {i}')
     # cloned_task = Task.clone(source_task=task)
     # Task.enqueue(task=cloned_task, queue_name='default')
-    task.execute_remotely(queue_name=None, clone=False, exit_process=True)
+    task.execute_remotely(queue_name='default', clone=False, exit_process=True)
 
     os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
 
