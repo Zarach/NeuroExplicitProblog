@@ -57,7 +57,7 @@ def start_task():
     models_path = models.get_mutable_local_copy("Models/", True)
 
     lp = LogicalPlausibility.LogicalPlausibility()
-    lp.check_plausibility(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, models_path)
+    lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
 
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="Results"
@@ -69,7 +69,7 @@ def start_task():
 
 
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    tspr.run(args.experiment_number, args.period_start, args.period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
+    tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
 
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="Results"
@@ -103,10 +103,10 @@ for i in range(experiment_number-1):
 
 parser.add_argument('--experiment_number', type=int, default=experiment_number, metavar='N',
                         help='Experiment Number')
-parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
-                        help='Start Date')
-parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
-                        help='End Date')
+# parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
+#                         help='Start Date')
+# parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
+#                         help='End Date')
 
 args = parser.parse_args()
 
