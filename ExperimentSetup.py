@@ -94,6 +94,7 @@ period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:
 experiment_number = 2
 
 for i in range(experiment_number-1):
+    print(f'experiment {i}')
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
         days=14)).strftime("%Y-%m-%d %H:%M:%S")
     period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
@@ -101,7 +102,7 @@ for i in range(experiment_number-1):
 
 
 parser.add_argument('--experiment_number', type=int, default=experiment_number, metavar='N',
-                            help='Experiment Number')
+                        help='Experiment Number')
 parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
                         help='Start Date')
 parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
