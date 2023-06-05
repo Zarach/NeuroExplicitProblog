@@ -88,8 +88,8 @@ def start_task():
     print("Models uploaded.")
 
 parser = argparse.ArgumentParser()
-period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
-period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
+period_start = datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S")
+period_end = datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")
 
 experiment_number = 2
 
