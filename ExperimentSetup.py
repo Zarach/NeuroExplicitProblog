@@ -65,6 +65,10 @@ def start_task():
     dataset.add_files(path='Results/')
     dataset.upload(chunk_size=100)
     dataset.finalize()
+
+    dataset_databases.sync_folder('DataBases/Facts', "DataBases/Facts", True)
+    dataset_databases.upload(chunk_size=100)
+
     print("Logic results uploaded.")
 
 
