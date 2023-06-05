@@ -216,7 +216,11 @@ class LogicalPlausibility:
         self.rules_list = []
         rules = self.load_rules("rules_manual.json")
         facts_string, fact_list = self.load_facts(database_root, f'facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number-1)}.json', period_start, period_end)
-        print(facts_string)
+
+        print(f"loading facts from {database_root}facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number-1)}.json")
+        print(f"start period: {period_start}")
+        print(f"end period: {period_end}")
+
         facts_string += self.grounding(grounding_rule='act(A) :- kettle(A).', grounding_facts=facts_string) # ; coffee(A); washing_machine(A); microwave(A); toaster(A); television(A).
         facts_string += self.grounding(grounding_rule='duration(A, B) :- start(A,C), get_stamp(C, D), end(A,E), get_stamp(E, F), B is F-D.', grounding_facts=facts_string)
         facts_string += self.grounding(grounding_rule='weekday(A, B) :- start(A,C), get_weekday(C, B).', grounding_facts=facts_string)
@@ -244,6 +248,8 @@ class LogicalPlausibility:
             script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
             rel_path = f"{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number-1)}.csv"
             abs_file_path = os.path.join(script_dir, rel_path)
+
+            print(f"saving results to {abs_file_path}")
 
             df_eval.to_csv(abs_file_path, header=['plausibility', 'ground truth'])
 
