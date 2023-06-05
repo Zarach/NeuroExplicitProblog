@@ -91,17 +91,8 @@ parser = argparse.ArgumentParser()
 period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
-experiment_number = 3
 
-for i in range(experiment_number-1):
-    print(f'experiment {i}')
-    period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-        days=14)).strftime("%Y-%m-%d %H:%M:%S")
-    period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-        days=14)).strftime("%Y-%m-%d %H:%M:%S")
-
-
-parser.add_argument('--experiment_number', type=int, default=experiment_number, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=4, metavar='N',
                         help='Experiment Number')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
@@ -109,6 +100,13 @@ parser.add_argument('--experiment_number', type=int, default=experiment_number, 
 #                         help='End Date')
 
 args = parser.parse_args()
+
+for i in range(args.experiment_number-1):
+    print(f'experiment {i}')
+    period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+        days=14)).strftime("%Y-%m-%d %H:%M:%S")
+    period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+        days=14)).strftime("%Y-%m-%d %H:%M:%S")
 
 start_task()
 
