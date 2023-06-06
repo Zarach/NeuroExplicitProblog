@@ -109,7 +109,7 @@ period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%
 period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
 
-parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=3, metavar='N',
                         help='Experiment Number')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
