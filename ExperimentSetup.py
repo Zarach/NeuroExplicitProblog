@@ -14,9 +14,9 @@ import roman
 from clearml import Task, Dataset, InputModel, Model
 from tensorflow.keras.models import Sequential
 
-dataset = Dataset.create(
-    dataset_project="NeSy", dataset_name="DataBases"
-)
+# dataset = Dataset.create(
+#     dataset_project="NeSy", dataset_name="DataBases"
+# )
 
 # add the example csv
 #dataset.add_files(path="DataBases/")
@@ -38,6 +38,7 @@ def start_task():
     # Task.enqueue(task=cloned_task, queue_name='default')
     task.execute_remotely(queue_name='default', clone=False, exit_process=True)
 
+    # copy custom problog module
     os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
 
     f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
@@ -46,19 +47,23 @@ def start_task():
     import TimeSeriesPatternRecognition
 
 
-
+    #get local copy of DataBases
     dataset_databases = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
     dataset_path_databases = dataset_databases.get_mutable_local_copy("DataBases/", True)
 
+    #get local copy of Results
     dataset_results = Dataset.get(dataset_project='NeSy', dataset_name='Results')
     dataset_path_results = dataset_results.get_mutable_local_copy("Results/", True)
 
+    # get local copy of Results
     models = Dataset.get(dataset_project='NeSy', dataset_name='Models')
     models_path = models.get_mutable_local_copy("Models/", True)
 
+    # do a plausibility check for experiment_number-1 NN-Results
     lp = LogicalPlausibility.LogicalPlausibility()
     lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
 
+    # save plausibility check Results as Dataset
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="Results"
         )
@@ -68,7 +73,7 @@ def start_task():
 
 
     dataset = Dataset.create(
-             dataset_project="NeSy", dataset_name="Results"
+             dataset_project="NeSy", dataset_name="DataBases"
         )
     dataset.sync_folder('DataBases/Facts', "DataBases/Facts", True)
     dataset.upload(chunk_size=100)
@@ -101,7 +106,7 @@ period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%
 period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
 
-parser.add_argument('--experiment_number', type=int, default=4, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=2, metavar='N',
                         help='Experiment Number')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
