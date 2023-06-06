@@ -74,7 +74,7 @@ def start_task():
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="DataBases"
         )
-    dataset.sync_folder('DataBases/Facts', "DataBases/Facts", True)
+    dataset.sync_folder('DataBases/', "DataBases/", True)
     dataset.upload(chunk_size=100)
     dataset.finalize()
 
