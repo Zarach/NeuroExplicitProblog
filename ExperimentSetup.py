@@ -40,7 +40,6 @@ def start_task():
 
     # copy custom problog module
     os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
-
     f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
 
     import LogicalPlausibility
@@ -71,7 +70,7 @@ def start_task():
     dataset.upload(chunk_size=100)
     dataset.finalize()
 
-
+    # save plausibility checked facts as Dataset
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="DataBases"
         )
@@ -81,10 +80,11 @@ def start_task():
 
     print("Logic results uploaded.")
 
-
+    # finetune the model on the plausibility checked facts
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
+    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
 
+    # save the Results of the Model for experiment_number
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="Results"
         )
@@ -93,6 +93,7 @@ def start_task():
     dataset.finalize()
     print("Neuro results uploaded.")
 
+    # save the Model for experiment_number
     dataset = Dataset.create(
              dataset_project="NeSy", dataset_name="Models"
         )
@@ -100,6 +101,8 @@ def start_task():
     dataset.upload(chunk_size=100)
     dataset.finalize()
     print("Models uploaded.")
+
+    print(f"Evaluation Metrics: {eval_metrics}")
 
 parser = argparse.ArgumentParser()
 period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")

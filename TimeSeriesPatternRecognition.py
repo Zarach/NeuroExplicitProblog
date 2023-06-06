@@ -223,7 +223,8 @@ class TimeSeriesPatternRecognition():
             modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
-        print(modelKettle.evaluate(test_X_time, test_y_time))
+        eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
+        print(f"Evaluation Metrics: {eval_metrics}" )
         evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
 
 
@@ -294,3 +295,4 @@ class TimeSeriesPatternRecognition():
         plt.show()
         print('--------------------------------------------------------')
         print('Time Series Pattern Recognition done')
+        return eval_metrics
