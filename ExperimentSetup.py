@@ -14,9 +14,9 @@ import roman
 from clearml import Task, Dataset, InputModel, Model
 from tensorflow.keras.models import Sequential
 
-# dataset = Dataset.create(
-#     dataset_project="NeSy", dataset_name="DataBases"
-# )
+dataset = Dataset.create(
+    dataset_project="NeSy", dataset_name="DataBases"
+)
 
 # add the example csv
 #dataset.add_files(path="DataBases/")
@@ -25,8 +25,8 @@ from tensorflow.keras.models import Sequential
 # dataset = Dataset.get(dataset_project='NeSy', dataset_name='DataBases')
 # dataset.sync_folder("DataBases")
 # dataset.upload(chunk_size=100)
-#
-# # commit dataset changes
+# #
+# # # commit dataset changes
 # dataset.finalize
 
 
@@ -66,8 +66,13 @@ def start_task():
     dataset.upload(chunk_size=100)
     dataset.finalize()
 
-    dataset_databases.sync_folder('DataBases/Facts', "DataBases/Facts", True)
-    dataset_databases.upload(chunk_size=100)
+
+    dataset = Dataset.create(
+             dataset_project="NeSy", dataset_name="Results"
+        )
+    dataset.sync_folder('DataBases/Facts', "DataBases/Facts", True)
+    dataset.upload(chunk_size=100)
+    dataset.finalize()
 
     print("Logic results uploaded.")
 
@@ -105,6 +110,7 @@ parser.add_argument('--experiment_number', type=int, default=4, metavar='N',
 
 args = parser.parse_args()
 
+# Claculate periods by experiment number
 for i in range(args.experiment_number-1):
     print(f'experiment {i}')
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
