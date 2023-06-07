@@ -62,13 +62,9 @@ def start_task():
     lp = LogicalPlausibility.LogicalPlausibility()
     lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
 
-    # save plausibility check Results as Dataset
-    dataset = Dataset.create(
-             dataset_project="NeSy", dataset_name="Results"
-        )
-    dataset.add_files(path='Results/')
-    dataset.upload(chunk_size=100)
-    dataset.finalize()
+    # finetune the model on the plausibility checked facts
+    tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
+    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
 
     # save plausibility checked facts as Dataset
     dataset = Dataset.create(
@@ -77,12 +73,8 @@ def start_task():
     dataset.add_files('DataBases/')
     dataset.upload(chunk_size=100)
     dataset.finalize()
+    print("DataBases uploaded.")
 
-    print("Logic results uploaded.")
-
-    # finetune the model on the plausibility checked facts
-    tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
 
     # save the Results of the Model for experiment_number
     dataset = Dataset.create(
@@ -91,7 +83,7 @@ def start_task():
     dataset.add_files(path='Results/')
     dataset.upload(chunk_size=100)
     dataset.finalize()
-    print("Neuro results uploaded.")
+    print("Results uploaded.")
 
     # save the Model for experiment_number
     dataset = Dataset.create(
@@ -109,7 +101,7 @@ period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%
 period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
 
-parser.add_argument('--experiment_number', type=int, default=8, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=7, metavar='N',
                         help='Experiment Number')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
