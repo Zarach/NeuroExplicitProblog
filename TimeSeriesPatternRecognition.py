@@ -282,8 +282,8 @@ class TimeSeriesPatternRecognition():
                 end = evalKettle.index[idx]
 
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        rel_path = f"{database_root}/Facts/facts_from_ml_sensors_precision_{roman.toRoman(experiment_number)}.json"
-        print(f"Saving Facts from Model to '{database_root}/Facts/facts_from_ml_sensors_precision_{roman.toRoman(experiment_number)}.json'")
+        rel_path = f"{database_root}/Facts/facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number)}.json"
+        print(f"Saving Facts from Model to '{database_root}/Facts/facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number)}.json'")
         abs_file_path = os.path.join(script_dir, rel_path)
 
         with open(abs_file_path, 'w') as facts_file:
