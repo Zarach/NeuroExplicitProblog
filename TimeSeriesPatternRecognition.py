@@ -29,23 +29,6 @@ import os
 import Utils
 
 class TimeSeriesPatternRecognition():
-    def create_model_cnn_lstm(self):
-        model = Sequential()  # add model layers
-        model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(299, 1)))
-        model.add(Conv1D(30, kernel_size=8, activation="relu", strides=1))
-        model.add(Conv1D(40, kernel_size=6, activation="relu", strides=1))
-        # model.add(Dropout(0.1))
-        model.add(Conv1D(50, kernel_size=5, activation="relu", strides=1))
-        # model.add(Dropout(0.2))
-        model.add(Conv1D(50, kernel_size=5, activation="relu", strides=1))
-        # model.add(Flatten())
-        # model.add(Dense(256, activation='relu'))
-        # model.add(Reshape((1,256)))
-        # model.add(Dropout(0.4))
-        model.add(LSTM(128))
-        model.add(Dense(1, activation='sigmoid'))
-        return model
-
 
     def create_model(self):
         model = Sequential()#add model layers
@@ -90,7 +73,7 @@ class TimeSeriesPatternRecognition():
             df_active_phase_all = pd.read_csv(path, header = 0, index_col = 0, parse_dates = [0])
             df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
             # df_active_phase_plausibility = df_active_phase_all.fillna(0)
-            df_active_phase_plausibility = df_active_phase_plausibility.resample('1s').median()
+            df_active_phase_plausibility = df_active_phase_plausibility.resample('2s').median()
 
         # Pretraining Labels
         df_active_phase_all = Utils.load_csv_from_folder(database_root+"/Barthi/active_phases", "timestamp")
@@ -111,9 +94,9 @@ class TimeSeriesPatternRecognition():
         df_active_phase.index = pd.to_datetime(df_active_phase.index)
 
         df_active_phase = df_active_phase.fillna(0)
-        df_power_consumption = df_power_consumption.resample('1s').mean()
+        df_power_consumption = df_power_consumption.resample('2s').mean()
 
-        df_active_phase = df_active_phase.resample('1s').median()
+        df_active_phase = df_active_phase.resample('2s').median()
         #df = pd.concat([df_power_consumption, df_active_phase], axis=1, ignore_index=False)
         #df_power_consumption = df_power_consumption.iloc[:-360] #241920, 51840
         #df_active_phase = df_active_phase.iloc[360:]
@@ -153,9 +136,11 @@ class TimeSeriesPatternRecognition():
         if load is False:
             train_y, test_y = df_active_phase.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
             recall_weight = 10.
+            lr = 0.001
         else:
             train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
             recall_weight = 5.
+            lr = 0.0001
 
         #plt.plot(train_X)
         #plt.plot(train_y)
@@ -191,7 +176,7 @@ class TimeSeriesPatternRecognition():
                         1: recall_weight}
         modelKettle = self.create_model()
 
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+        optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
 
         modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
