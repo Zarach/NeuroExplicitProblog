@@ -135,7 +135,7 @@ class TimeSeriesPatternRecognition():
         # pretraining round Barthi
         if load is False:
             train_y, test_y = df_active_phase.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
-            recall_weight = 10.
+            recall_weight = 20.
             lr = 0.001
         else:
             train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
