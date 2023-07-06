@@ -188,11 +188,8 @@ class TimeSeriesPatternRecognition():
 
         #Kettle
         class_weight = {0: 1.,
-                        1: 5.}
+                        1: recall_weight}
         modelKettle = self.create_model()
-
-        load = True
-        finetune = True
 
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 

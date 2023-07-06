@@ -33,7 +33,7 @@ from tensorflow.keras.models import Sequential
 
 def start_task():
     global task
-    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {i}')
+    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
     # cloned_task = Task.clone(source_task=task)
     # Task.enqueue(task=cloned_task, queue_name='default')
     task.execute_remotely(queue_name='default', clone=False, exit_process=True)
@@ -59,16 +59,18 @@ def start_task():
     models_path = models.get_mutable_local_copy("Models/", True)
 
     # do a plausibility check for experiment_number-1 NN-Results
-    if i > 0:
+    if args.experiment_number > 0:
         lp = LogicalPlausibility.LogicalPlausibility()
         lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
         load = True
+        finetune = True
     else:
         load = False
+        finetune = False
 
     # finetune the model on the plausibility checked facts
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load) #model_path)
+    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
 
     # save plausibility checked facts as Dataset
     dataset = Dataset.create(
@@ -116,7 +118,7 @@ args = parser.parse_args()
 
 # Claculate periods by experiment number
 
-for i in range(args.experiment_number-1):
+for i in range(args.experiment_number):
     print(f'experiment {i}')
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
         days=14)).strftime("%Y-%m-%d %H:%M:%S")
