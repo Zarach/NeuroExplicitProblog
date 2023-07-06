@@ -79,7 +79,7 @@ class TimeSeriesPatternRecognition():
         dataY[dataY > 10] = 1
         return dataX, dataY, index
 
-    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True):
+    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
