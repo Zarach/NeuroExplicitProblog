@@ -79,36 +79,18 @@ class TimeSeriesPatternRecognition():
         dataY[dataY > 10] = 1
         return dataX, dataY, index
 
-
-
-
-
-    # Create a dataset with ClearML`s Dataset class
-    # dataset = Dataset.create(
-    #     dataset_project="NeSy", dataset_name="Results"
-    # )
-    #
-    # # add the example csv
-    # dataset.add_files(path="Results/")
-    # #dataset.sync_folder(local_path="DataBases/Barthi")
-    #
-    # # Upload dataset to ClearML server (customizable)
-    # dataset.upload(chunk_size=100)
-    #
-    # # commit dataset changes
-    # dataset.finalize()
-
-
-    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path=''):
+    def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
 
 
 
         # Finetuning Labels
-        df_active_phase_all = pd.read_csv(f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number-1)}.csv', header=0, index_col=0, parse_dates=[0])
-        df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
-        #df_active_phase_plausibility = df_active_phase_all.fillna(0)
-
+        if load is True:
+            path = f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number-1)}.csv'
+            df_active_phase_all = pd.read_csv(path, header = 0, index_col = 0, parse_dates = [0])
+            df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
+            # df_active_phase_plausibility = df_active_phase_all.fillna(0)
+            df_active_phase_plausibility = df_active_phase_plausibility.resample('1s').median()
 
         # Pretraining Labels
         df_active_phase_all = Utils.load_csv_from_folder(database_root+"/Barthi/active_phases", "timestamp")
@@ -129,9 +111,9 @@ class TimeSeriesPatternRecognition():
         df_active_phase.index = pd.to_datetime(df_active_phase.index)
 
         df_active_phase = df_active_phase.fillna(0)
-        df_power_consumption = df_power_consumption.resample('4s').mean()
-        df_active_phase_plausibility = df_active_phase_plausibility.resample('4s').median()
-        df_active_phase = df_active_phase.resample('4s').median()
+        df_power_consumption = df_power_consumption.resample('1s').mean()
+
+        df_active_phase = df_active_phase.resample('1s').median()
         #df = pd.concat([df_power_consumption, df_active_phase], axis=1, ignore_index=False)
         #df_power_consumption = df_power_consumption.iloc[:-360] #241920, 51840
         #df_active_phase = df_active_phase.iloc[360:]
@@ -149,9 +131,7 @@ class TimeSeriesPatternRecognition():
 
         cut = int(df_active_phase.shape[0]/2)
 
-        # pretraining round Barthi
-        # train_X, test_X = df_power_consumption_scaled.loc[:"2022-12-18 23:59:59"], df_power_consumption_scaled.loc["2023-02-13 00:00:00":"2023-02-26 23:59:59"] # Train "2022-12-05 00:00:00", "2023-01-31 23:59:59" Test "2023-02-01 00:00:00", "2023-12-31 23:59:59"
-        # train_y, test_y = df_active_phase.loc[:"2022-12-18 23:59:59"], df_active_phase.loc["2023-02-13 00:00:00":"2023-02-26 23:59:59"]
+
 
         # finetuning Barthi
         # Train: "2022-12-05 00:00:00":"2022-01-18 23:59:59"
@@ -166,8 +146,16 @@ class TimeSeriesPatternRecognition():
         test_period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
         test_period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
 
-        train_X, test_X = df_power_consumption_scaled.loc[period_start:period_end], df_power_consumption_scaled.loc[test_period_start:test_period_end] # Train "2022-12-05 00:00:00", "2023-01-31 23:59:59" Test "2023-02-01 00:00:00", "2023-12-31 23:59:59"
-        train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
+        train_X, test_X = df_power_consumption_scaled.loc[period_start:period_end], df_power_consumption_scaled.loc[
+                                                                                    test_period_start:test_period_end]
+
+        # pretraining round Barthi
+        if load is False:
+            train_y, test_y = df_active_phase.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
+            recall_weight = 10.
+        else:
+            train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
+            recall_weight = 5.
 
         #plt.plot(train_X)
         #plt.plot(train_y)
@@ -196,6 +184,8 @@ class TimeSeriesPatternRecognition():
         #metrics.append(tf.keras.metrics.FalsePositives())
         #metrics.append(tf.keras.metrics.FalseNegatives())
 
+
+
         #Kettle
         class_weight = {0: 1.,
                         1: 5.}
@@ -220,7 +210,7 @@ class TimeSeriesPatternRecognition():
 
 
         if not load or finetune:
-            modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
+            modelKettle.fit(train_X_time, train_y_time, epochs=10, class_weight=class_weight, callbacks=[tensorboard_callback])
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)

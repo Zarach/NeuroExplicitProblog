@@ -59,12 +59,16 @@ def start_task():
     models_path = models.get_mutable_local_copy("Models/", True)
 
     # do a plausibility check for experiment_number-1 NN-Results
-    lp = LogicalPlausibility.LogicalPlausibility()
-    lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
+    if i > 0:
+        lp = LogicalPlausibility.LogicalPlausibility()
+        lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
+        load = True
+    else:
+        load = False
 
     # finetune the model on the plausibility checked facts
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path) #model_path)
+    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load) #model_path)
 
     # save plausibility checked facts as Dataset
     dataset = Dataset.create(
@@ -97,11 +101,11 @@ def start_task():
     print(f"Evaluation Metrics: {eval_metrics}")
 
 parser = argparse.ArgumentParser()
-period_start = (datetime.datetime.strptime("2022-12-19 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
-period_end = (datetime.datetime.strptime("2023-01-01 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
+period_start = (datetime.datetime.strptime("2022-12-05 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
+period_end = (datetime.datetime.strptime("2023-12-18 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
 
-parser.add_argument('--experiment_number', type=int, default=7, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=0, metavar='N',
                         help='Experiment Number')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
@@ -111,6 +115,7 @@ parser.add_argument('--experiment_number', type=int, default=7, metavar='N',
 args = parser.parse_args()
 
 # Claculate periods by experiment number
+
 for i in range(args.experiment_number-1):
     print(f'experiment {i}')
     period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
