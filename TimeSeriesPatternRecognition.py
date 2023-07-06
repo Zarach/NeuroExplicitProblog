@@ -192,7 +192,7 @@ class TimeSeriesPatternRecognition():
 
 
         if not load or finetune:
-            modelKettle.fit(train_X_time, train_y_time, epochs=10, class_weight=class_weight, callbacks=[tensorboard_callback])
+            modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
