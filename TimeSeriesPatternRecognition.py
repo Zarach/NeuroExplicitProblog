@@ -65,7 +65,7 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-        sampling_rate = '8s'
+        sampling_rate = '160s'
 
 
         # Finetuning Labels
@@ -199,8 +199,8 @@ class TimeSeriesPatternRecognition():
         #eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
 
         eval_kettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
-        eval_metrics = [precision_score(test_y, eval_kettle), recall_score(test_y, eval_kettle),
-                   f1_score(test_y, eval_kettle)]
+        eval_metrics = [precision_score(test_y[299:-299], eval_kettle), recall_score(test_y[299:-299], eval_kettle),
+                   f1_score(test_y[299:-299], eval_kettle)]
 
         print(f"Evaluation Metrics: {eval_metrics}")
 
