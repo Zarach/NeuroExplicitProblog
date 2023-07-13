@@ -109,9 +109,9 @@ class TimeSeriesPatternRecognition():
 
         #train_X, test_X, train_y, test_y = train_test_split(df_power_consumption_scaled, df_active_phase, test_size=.5,random_state=10)
 
-        plt.plot(pd.DataFrame(df_power_consumption))
-        plt.plot(pd.DataFrame(df_active_phase)*1000)
-        plt.show()
+        # plt.plot(pd.DataFrame(df_power_consumption))
+        # plt.plot(pd.DataFrame(df_active_phase)*1000)
+        # plt.show()
 
         # finetuning Barthi
         # Train: "2022-12-05 00:00:00":"2022-01-18 23:59:59"
@@ -267,10 +267,10 @@ class TimeSeriesPatternRecognition():
             json_string = json.dumps(facts, ensure_ascii=False, indent=4)
             facts_file.write(json_string)
 
-        plt.plot(pd.DataFrame(test_X, index=index))
-        plt.plot(pd.DataFrame(test_y_time, index=index))
-        plt.plot(eval_kettle)
-        plt.show()
+        # plt.plot(pd.DataFrame(test_X, index=index))
+        # plt.plot(pd.DataFrame(test_y_time, index=index))
+        # plt.plot(eval_kettle)
+        # plt.show()
         print('--------------------------------------------------------')
         print('Time Series Pattern Recognition done')
         return eval_metrics
