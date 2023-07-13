@@ -199,8 +199,8 @@ class TimeSeriesPatternRecognition():
         #eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
 
         eval_kettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
-        eval_metrics = [precision_score(test_y[299:-299], eval_kettle), recall_score(test_y[299:-299], eval_kettle),
-                   f1_score(test_y[299:-299], eval_kettle)]
+        eval_metrics = [precision_score(test_y[149:-149], eval_kettle), recall_score(test_y[149:-149], eval_kettle),
+                   f1_score(test_y[149:-149], eval_kettle)]
 
         print(f"Evaluation Metrics: {eval_metrics}")
 
