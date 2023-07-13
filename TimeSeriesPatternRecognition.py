@@ -43,7 +43,7 @@ class TimeSeriesPatternRecognition():
         #model.add(Dropout(0.4))
         model.add(Flatten())
         model.add(Dense(256, activation='relu'))
-        #model.add(Dropout(0.5))
+        model.add(Dropout(0.2))
         model.add(Dense(1, activation='sigmoid'))
         return model
 
@@ -65,7 +65,7 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-        sampling_rate = '160s'
+        sampling_rate = '2s'
 
 
         # Finetuning Labels
@@ -196,11 +196,11 @@ class TimeSeriesPatternRecognition():
             modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
-        #eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
+        eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
 
         eval_kettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
-        eval_metrics = [precision_score(test_y[149:-149], eval_kettle), recall_score(test_y[149:-149], eval_kettle),
-                   f1_score(test_y[149:-149], eval_kettle)]
+        # eval_metrics = [precision_score(test_y[149:-149], eval_kettle), recall_score(test_y[149:-149], eval_kettle),
+        #            f1_score(test_y[149:-149], eval_kettle)]
 
         print(f"Evaluation Metrics: {eval_metrics}")
 
