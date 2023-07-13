@@ -2,6 +2,7 @@ import datetime
 import json
 
 import roman
+from sklearn.metrics import f1_score, recall_score, precision_score
 from clearml import Task, Dataset
 
 #task = Task.init(project_name='NeSy', task_name='classificator training')
@@ -64,7 +65,7 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-
+        sampling_rate = '8s'
 
 
         # Finetuning Labels
@@ -73,7 +74,7 @@ class TimeSeriesPatternRecognition():
             df_active_phase_all = pd.read_csv(path, header = 0, index_col = 0, parse_dates = [0])
             df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
             # df_active_phase_plausibility = df_active_phase_all.fillna(0)
-            df_active_phase_plausibility = df_active_phase_plausibility.resample('2s').median()
+            df_active_phase_plausibility = df_active_phase_plausibility.resample(sampling_rate).median()
 
         # Pretraining Labels
         df_active_phase_all = Utils.load_csv_from_folder(database_root+"/Barthi/active_phases", "timestamp")
@@ -94,9 +95,9 @@ class TimeSeriesPatternRecognition():
         df_active_phase.index = pd.to_datetime(df_active_phase.index)
 
         df_active_phase = df_active_phase.fillna(0)
-        df_power_consumption = df_power_consumption.resample('2s').mean()
+        df_power_consumption = df_power_consumption.resample(sampling_rate).mean()
 
-        df_active_phase = df_active_phase.resample('2s').median()
+        df_active_phase = df_active_phase.resample(sampling_rate).median()
         #df = pd.concat([df_power_consumption, df_active_phase], axis=1, ignore_index=False)
         #df_power_consumption = df_power_consumption.iloc[:-360] #241920, 51840
         #df_active_phase = df_active_phase.iloc[360:]
@@ -195,9 +196,13 @@ class TimeSeriesPatternRecognition():
             modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
-        eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
-        print(f"Evaluation Metrics: {eval_metrics}" )
-        evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
+        #eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
+
+        eval_kettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
+        eval_metrics = [precision_score(test_y, eval_kettle), recall_score(test_y, eval_kettle),
+                   f1_score(test_y, eval_kettle)]
+
+        print(f"Evaluation Metrics: {eval_metrics}")
 
 
 
@@ -216,15 +221,15 @@ class TimeSeriesPatternRecognition():
         threshold = 0.2
         facts = []
 
-        evalKettle[evalKettle < threshold] = 0
+        eval_kettle[eval_kettle < threshold] = 0
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
         rel_path = f"{results_root}/evaluation_nn_{roman.toRoman(experiment_number)}.csv"
         abs_file_path = os.path.join(script_dir, rel_path)
 
-        evalKettle.to_csv(abs_file_path)
+        eval_kettle.to_csv(abs_file_path)
 
 
-        for idx, value in enumerate(evalKettle.values):
+        for idx, value in enumerate(eval_kettle.values):
             if value < threshold and start is not None and end is not None:
                 print(str(start) + " - " + str(end))
                 probability = (sum(activity_values) / len(activity_values))[0]
@@ -246,12 +251,12 @@ class TimeSeriesPatternRecognition():
                 start = None
                 end = None
             elif start is None and value >= threshold:
-                start = evalKettle.index[idx]
+                start = eval_kettle.index[idx]
                 activity_values.append(value)
             elif value >= threshold:
                 activity_values.append(value)
             elif value < threshold and start is not None:
-                end = evalKettle.index[idx]
+                end = eval_kettle.index[idx]
 
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
         rel_path = f"{database_root}/Facts/facts_from_ml_sensors_finetuned_{roman.toRoman(experiment_number)}.json"
@@ -264,7 +269,7 @@ class TimeSeriesPatternRecognition():
 
         plt.plot(pd.DataFrame(test_X, index=index))
         plt.plot(pd.DataFrame(test_y_time, index=index))
-        plt.plot(evalKettle)
+        plt.plot(eval_kettle)
         plt.show()
         print('--------------------------------------------------------')
         print('Time Series Pattern Recognition done')
