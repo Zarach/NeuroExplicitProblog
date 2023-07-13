@@ -108,13 +108,9 @@ class TimeSeriesPatternRecognition():
 
         #train_X, test_X, train_y, test_y = train_test_split(df_power_consumption_scaled, df_active_phase, test_size=.5,random_state=10)
 
-        #plt.plot(pd.DataFrame(df_power_consumption))
-        #plt.plot(pd.DataFrame(df_active_phase)*1000)
-        #plt.show()
-
-        cut = int(df_active_phase.shape[0]/2)
-
-
+        plt.plot(pd.DataFrame(df_power_consumption))
+        plt.plot(pd.DataFrame(df_active_phase)*1000)
+        plt.show()
 
         # finetuning Barthi
         # Train: "2022-12-05 00:00:00":"2022-01-18 23:59:59"
@@ -128,6 +124,9 @@ class TimeSeriesPatternRecognition():
 
         test_period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
         test_period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
+
+        print(f'Train model on {period_start} - {period_end}')
+        print(f'Test model on {test_period_start} - {test_period_end}')
 
         train_X, test_X = df_power_consumption_scaled.loc[period_start:period_end], df_power_consumption_scaled.loc[
                                                                                     test_period_start:test_period_end]
@@ -181,6 +180,7 @@ class TimeSeriesPatternRecognition():
         modelKettle.compile(optimizer, loss='binary_crossentropy', metrics=metrics)
 
         if load:
+            print(f'model {roman.toRoman(experiment_number-1)} loaded')
             modelKettle.load_weights(f"{models_path}/model_finetuned_{roman.toRoman(experiment_number-1)}.h5")
             # modelKettle = model
         if finetune:
@@ -192,7 +192,7 @@ class TimeSeriesPatternRecognition():
 
 
         if not load or finetune:
-            modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])
+            modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
