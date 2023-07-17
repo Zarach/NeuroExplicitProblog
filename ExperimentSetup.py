@@ -34,8 +34,6 @@ from tensorflow.keras.models import Sequential
 def start_task():
     global task
     task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
-    # cloned_task = Task.clone(source_task=task)
-    # Task.enqueue(task=cloned_task, queue_name='default')
     task.execute_remotely(queue_name='default', clone=False, exit_process=True)
 
     # copy custom problog module
