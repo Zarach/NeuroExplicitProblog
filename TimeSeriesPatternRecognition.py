@@ -160,8 +160,8 @@ class TimeSeriesPatternRecognition():
         dataset = tf.data.Dataset.from_tensors(train_X[:500])
         dataset = dataset.window(5, shift=1, drop_remainder=True)
         dataset = dataset.flat_map(lambda window: window.batch(5))
-        for x, y in dataset:
-            print(x.numpy(), y.numpy())
+        for x in dataset:
+            print(x.numpy())
 
         #test_X = test_X.set_index(test_y.index)
 
