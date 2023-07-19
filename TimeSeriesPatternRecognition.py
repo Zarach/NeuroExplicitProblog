@@ -155,6 +155,8 @@ class TimeSeriesPatternRecognition():
         # test_y = test_y*2-1
         train_X_time, train_y_time, index = self.create_dataset(train_X, train_y)
         test_X_time, test_y_time, index = self.create_dataset(test_X, test_y)
+        train_dataset = tf.data.Dataset.from_tensor_slices((train_X_time, train_y_time))
+        test_dataset = tf.data.Dataset.from_tensor_slices((test_X_time, test_y_time))
 
         #test_X = test_X.set_index(test_y.index)
 
@@ -198,12 +200,12 @@ class TimeSeriesPatternRecognition():
 
 
         if not load or finetune:
-            modelKettle.fit(train_X_time, train_y_time, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
+            modelKettle.fit(train_dataset, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
-        eval_metrics = modelKettle.evaluate(test_X_time, test_y_time)
+        eval_metrics = modelKettle.evaluate(test_dataset)
         print(f"Evaluation Metrics: {eval_metrics}" )
-        evalKettle = pd.DataFrame(modelKettle.predict(test_X_time), index=index)
+        evalKettle = pd.DataFrame(modelKettle.predict(test_dataset), index=index)
 
 
 
