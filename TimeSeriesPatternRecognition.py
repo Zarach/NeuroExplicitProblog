@@ -157,11 +157,11 @@ class TimeSeriesPatternRecognition():
         test_X_time, test_y_time, index = self.create_dataset(test_X, test_y)
         # train_dataset = tf.data.Dataset.from_tensor_slices((train_X_time, train_y_time))
         # test_dataset = tf.data.Dataset.from_tensor_slices((test_X_time, test_y_time))
-        dataset = tf.data.Dataset.from_tensors(train_X[:500])
+        dataset = tf.data.Dataset.from_tensor_slices(train_X[:500], train_y[:500])
         dataset = dataset.window(5, shift=1, drop_remainder=True)
         dataset = dataset.flat_map(lambda window: window.batch(5))
-        for x in dataset:
-            print(x.numpy())
+        for x, y  in dataset:
+            print(x.numpy(), y.numpy())
 
         #test_X = test_X.set_index(test_y.index)
 
