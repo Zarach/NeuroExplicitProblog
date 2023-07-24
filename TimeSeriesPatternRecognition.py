@@ -34,7 +34,7 @@ class TimeSeriesPatternRecognition():
 
     def create_model(self):
         model = Sequential()#add model layers
-        model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(WINDOW_SIZE, 1)))
+        model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(self.WINDOW_SIZE, 1)))
         model.add(Conv1D(30, kernel_size=8, activation="relu", strides=1))
         model.add(Conv1D(40, kernel_size=6, activation="relu", strides=1))
         #model.add(Dropout(0.1))
@@ -48,7 +48,7 @@ class TimeSeriesPatternRecognition():
         model.add(Dense(1, activation='sigmoid'))
         return model
 
-    def create_dataset(self, dataset_X, dataset_Y, window_size=WINDOW_SIZE):
+    def create_dataset(self, dataset_X, dataset_Y, window_size=599):
         gap = int((window_size-1)/2)
         dataX, dataY = [], []
         # for i in range(len(dataset_X)-window_size-1):
