@@ -30,7 +30,7 @@ import Utils
 
 class TimeSeriesPatternRecognition():
 
-    WINDOW_SIZE = 599
+    WINDOW_SIZE = 99
 
     def create_model(self):
         model = Sequential()#add model layers
@@ -43,7 +43,7 @@ class TimeSeriesPatternRecognition():
         model.add(Conv1D(50, kernel_size=5, activation="relu", strides=1))
         #model.add(Dropout(0.4))
         model.add(Flatten())
-        model.add(Dense(256, activation='relu'))
+        model.add(Dense(1024, activation='relu'))
         #model.add(Dropout(0.5))
         model.add(Dense(1, activation='sigmoid'))
         return model
@@ -132,7 +132,7 @@ class TimeSeriesPatternRecognition():
         test_period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14)).strftime("%Y-%m-%d %H:%M:%S")
 
         print(f'Train model on {period_start} - {period_end}')
-        print(f'Test model on {period_start} - {period_end}')
+        print(f'Test model on {test_period_start} - {test_period_end}')
 
 
 
@@ -155,8 +155,8 @@ class TimeSeriesPatternRecognition():
 
         # train_y = train_y*2-1
         # test_y = test_y*2-1
-        train_X_time, train_y_time, index = self.create_dataset(train_X, train_y)
-        test_X_time, test_y_time, index = self.create_dataset(test_X, test_y)
+        # train_X_time, train_y_time, index = self.create_dataset(train_X, train_y)
+        # test_X_time, test_y_time, index = self.create_dataset(test_X, test_y)
         # train_dataset = tf.data.Dataset.from_tensor_slices((train_X_time, train_y_time))
         # test_dataset = tf.data.Dataset.from_tensor_slices((test_X_time, test_y_time))
 
@@ -218,7 +218,7 @@ class TimeSeriesPatternRecognition():
 
         eval_metrics = modelKettle.evaluate(test_dataset)
         print(f"Evaluation Metrics: {eval_metrics}" )
-        evalKettle = pd.DataFrame(modelKettle.predict(test_dataset), index=index)
+        evalKettle = pd.DataFrame(modelKettle.predict(test_dataset))
 
 
 
