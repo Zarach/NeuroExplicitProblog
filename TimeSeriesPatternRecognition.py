@@ -30,9 +30,11 @@ import Utils
 
 class TimeSeriesPatternRecognition():
 
+    WINDOW_SIZE = 599
+
     def create_model(self):
         model = Sequential()#add model layers
-        model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(599, 1)))
+        model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(WINDOW_SIZE, 1)))
         model.add(Conv1D(30, kernel_size=8, activation="relu", strides=1))
         model.add(Conv1D(40, kernel_size=6, activation="relu", strides=1))
         #model.add(Dropout(0.1))
@@ -46,7 +48,7 @@ class TimeSeriesPatternRecognition():
         model.add(Dense(1, activation='sigmoid'))
         return model
 
-    def create_dataset(self, dataset_X, dataset_Y, window_size=599):
+    def create_dataset(self, dataset_X, dataset_Y, window_size=WINDOW_SIZE):
         gap = int((window_size-1)/2)
         dataX, dataY = [], []
         # for i in range(len(dataset_X)-window_size-1):
@@ -157,13 +159,17 @@ class TimeSeriesPatternRecognition():
         test_X_time, test_y_time, index = self.create_dataset(test_X, test_y)
         # train_dataset = tf.data.Dataset.from_tensor_slices((train_X_time, train_y_time))
         # test_dataset = tf.data.Dataset.from_tensor_slices((test_X_time, test_y_time))
-        print(f'X: {train_X[:500]}')
-        print(f'y: {train_y[:500]}')
-        dataset = tf.data.Dataset.from_tensor_slices(train_X[:500, :], train_y[:500, :])
-        dataset = dataset.window(5, shift=1, drop_remainder=True)
-        dataset = dataset.flat_map(lambda window: window.batch(5))
-        for x, y  in dataset:
-            print(x.numpy(), y.numpy())
+
+        train_dataset = tf.keras.utils.timeseries_dataset_from_array(
+            train_X, train_y.iloc[int(self.WINDOW_SIZE/2):, :], sequence_length=self.WINDOW_SIZE)
+        test_dataset = tf.keras.utils.timeseries_dataset_from_array(
+            test_X, test_y.iloc[int(self.WINDOW_SIZE/2):, :], sequence_length=self.WINDOW_SIZE)
+
+        # dataset = tf.data.Dataset.from_tensor_slices(train_X[:500, :], train_y[:500, :])
+        # dataset = dataset.window(5, shift=1, drop_remainder=True)
+        # dataset = dataset.flat_map(lambda window: window.batch(5))
+        # for x, y  in dataset:
+        #     print(x.numpy(), y.numpy())
 
         #test_X = test_X.set_index(test_y.index)
 

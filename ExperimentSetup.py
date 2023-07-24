@@ -33,12 +33,12 @@ from tensorflow.keras.models import Sequential
 
 def start_task():
     global task
-    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
-    task.execute_remotely(queue_name='default', clone=False, exit_process=True)
-
-    # copy custom problog module
-    os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
-    f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
+    # task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
+    # task.execute_remotely(queue_name='default', clone=False, exit_process=True)
+    #
+    # # copy custom problog module
+    # os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
+    # f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
 
     import LogicalPlausibility
     import TimeSeriesPatternRecognition
