@@ -43,7 +43,7 @@ class TimeSeriesPatternRecognition():
         model.add(Conv1D(50, kernel_size=5, activation="relu", strides=1))
         #model.add(Dropout(0.4))
         model.add(Flatten())
-        model.add(Dense(1024, activation='relu'))
+        model.add(Dense(256, activation='relu'))
         #model.add(Dropout(0.5))
         model.add(Dense(1, activation='sigmoid'))
         return model
@@ -66,7 +66,7 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-        resampling_rate = '2s'
+        resampling_rate = '8s'
 
 
         # Finetuning Labels
@@ -110,11 +110,11 @@ class TimeSeriesPatternRecognition():
 
         #train_X, test_X, train_y, test_y = train_test_split(df_power_consumption_scaled, df_active_phase, test_size=.5,random_state=10)
 
-        #plt.plot(pd.DataFrame(df_power_consumption))
-        #plt.plot(pd.DataFrame(df_active_phase)*1000)
-        #plt.show()
+        # plt.plot(pd.DataFrame(df_power_consumption))
+        # plt.plot(pd.DataFrame(df_active_phase)*1000)
+        # plt.show()
 
-        cut = int(df_active_phase.shape[0]/2)
+        # cut = int(df_active_phase.shape[0]/2)
 
 
 
@@ -143,12 +143,15 @@ class TimeSeriesPatternRecognition():
         if load is False:
             train_y, test_y = df_active_phase.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
             recall_weight = 20.
-            lr = 0.001
+            lr = 0.0001
         else:
             train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
             recall_weight = 5.
-            lr = 0.0001
-
+            lr = 0.00001
+        #
+        # plt.plot(pd.DataFrame(train_X))
+        # plt.plot(pd.DataFrame(train_y))
+        # plt.show()
         #plt.plot(train_X)
         #plt.plot(train_y)
         #plt.show()
@@ -213,7 +216,7 @@ class TimeSeriesPatternRecognition():
 
 
         if not load or finetune:
-            modelKettle.fit(train_dataset, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback], verbose=2)
+            modelKettle.fit(train_dataset, epochs=5, class_weight=class_weight, callbacks=[tensorboard_callback])#, verbose=2)
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         eval_metrics = modelKettle.evaluate(test_dataset)
