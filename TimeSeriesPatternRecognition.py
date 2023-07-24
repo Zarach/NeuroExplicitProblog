@@ -30,7 +30,7 @@ import Utils
 
 class TimeSeriesPatternRecognition():
 
-    WINDOW_SIZE = 99
+    WINDOW_SIZE = 599
 
     def create_model(self):
         model = Sequential()#add model layers
@@ -43,7 +43,7 @@ class TimeSeriesPatternRecognition():
         model.add(Conv1D(50, kernel_size=5, activation="relu", strides=1))
         #model.add(Dropout(0.4))
         model.add(Flatten())
-        model.add(Dense(256, activation='relu'))
+        model.add(Dense(1024, activation='relu'))
         #model.add(Dropout(0.5))
         model.add(Dense(1, activation='sigmoid'))
         return model
@@ -66,13 +66,13 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-        resampling_rate = '8s'
+        resampling_rate = '2s'
 
 
         # Finetuning Labels
         if load is True:
             path = f'{results_root}/evaluation_plausibility_manual_{roman.toRoman(experiment_number-1)}.csv'
-            df_active_phase_all = pd.read_csv(path, header = 0, index_col = 0, parse_dates = [0])
+            df_active_phase_all = pd.read_csv(path, header=0, index_col=0, parse_dates=[0])
             df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
             # df_active_phase_plausibility = df_active_phase_all.fillna(0)
             df_active_phase_plausibility = df_active_phase_plausibility.resample(resampling_rate).median()
@@ -286,10 +286,10 @@ class TimeSeriesPatternRecognition():
             json_string = json.dumps(facts, ensure_ascii=False, indent=4)
             facts_file.write(json_string)
 
-        plt.plot(pd.DataFrame(test_X, index=index))
-        plt.plot(pd.DataFrame(test_y_time, index=index))
-        plt.plot(evalKettle)
-        plt.show()
-        print('--------------------------------------------------------')
+        # plt.plot(pd.DataFrame(test_X, index=index))
+        # plt.plot(pd.DataFrame(test_y_time, index=index))
+        # plt.plot(evalKettle)
+        # plt.show()
+        # print('--------------------------------------------------------')
         print('Time Series Pattern Recognition done')
         return eval_metrics
