@@ -175,6 +175,7 @@ class TimeSeriesPatternRecognition():
         #     print(x.numpy(), y.numpy())
 
         #test_X = test_X.set_index(test_y.index)
+        y_time_index = test_y.iloc[int(self.WINDOW_SIZE/2):, :].index
 
         logdir = "logs/scalars/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         tensorboard_callback = TensorBoard(log_dir=logdir)
@@ -220,7 +221,7 @@ class TimeSeriesPatternRecognition():
             modelKettle.save_weights(f"Models/model_finetuned_{roman.toRoman(experiment_number)}.h5")
 
         eval_metrics = modelKettle.evaluate(test_dataset)
-        print(f"Evaluation Metrics: {eval_metrics}" )
+        print(f"Evaluation Metrics: {eval_metrics}")
         evalKettle = pd.DataFrame(modelKettle.predict(test_dataset))
 
 
@@ -250,17 +251,17 @@ class TimeSeriesPatternRecognition():
 
         for idx, value in enumerate(evalKettle.values):
             if value < threshold and start is not None and end is not None:
-                print(str(start) + " - " + str(end))
+                print(str(y_time_index[start]) + " - " + str(y_time_index[end]))
                 probability = (sum(activity_values) / len(activity_values))[0]
 
                 activity_predicate_string = f"{probability}::kettle({activity_id})."
                 facts.append(activity_predicate_string)
 
-                start_date_predicate_string = f"start({activity_id}, \'{start}\')."
+                start_date_predicate_string = f"start({activity_id}, \'{y_time_index[start]}\')."
                 #print(start_date_predicate_string)
                 facts.append(start_date_predicate_string)
 
-                end_date_predicate_string = f"end({activity_id}, \'{end}\')."
+                end_date_predicate_string = f"end({activity_id}, \'{y_time_index[end]}\')."
                 #print(end_date_predicate_string)
                 facts.append(end_date_predicate_string)
 
