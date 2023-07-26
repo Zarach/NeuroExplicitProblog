@@ -30,9 +30,11 @@ import Utils
 
 class TimeSeriesPatternRecognition():
 
-    WINDOW_SIZE = 49
+    WINDOW_SIZE = 599
+    RESAMPLING_RATE = '1s'
 
     def create_model(self):
+
         model = Sequential()#add model layers
         model.add(Conv1D(30, kernel_size=10, activation="relu", strides=1, input_shape=(self.WINDOW_SIZE, 1)))
         model.add(Conv1D(30, kernel_size=8, activation="relu", strides=1))
@@ -66,7 +68,7 @@ class TimeSeriesPatternRecognition():
 
     def run(self, experiment_number, period_start, period_end, database_root="DataBases", results_root="Results", models_path='', load=True, finetune=True):
         df_power_consumption = Utils.load_csv_from_folder(database_root+"/Barthi/power_consumption", "timestamp")[['smartMeter']]
-        resampling_rate = '10s'
+
 
 
         # Finetuning Labels
@@ -75,7 +77,7 @@ class TimeSeriesPatternRecognition():
             df_active_phase_all = pd.read_csv(path, header=0, index_col=0, parse_dates=[0])
             df_active_phase_plausibility = df_active_phase_all.drop(['ground truth'], axis=1).dropna()
             # df_active_phase_plausibility = df_active_phase_all.fillna(0)
-            df_active_phase_plausibility = df_active_phase_plausibility.resample(resampling_rate).median()
+            df_active_phase_plausibility = df_active_phase_plausibility.resample(self.RESAMPLING_RATE).median()
 
         # Pretraining Labels
         df_active_phase_all = Utils.load_csv_from_folder(database_root+"/Barthi/active_phases", "timestamp")
@@ -96,9 +98,9 @@ class TimeSeriesPatternRecognition():
         df_active_phase.index = pd.to_datetime(df_active_phase.index)
 
         df_active_phase = df_active_phase.fillna(0)
-        df_power_consumption = df_power_consumption.resample(resampling_rate).mean()
+        df_power_consumption = df_power_consumption.resample(self.RESAMPLING_RATE).mean()
 
-        df_active_phase = df_active_phase.resample(resampling_rate).median()
+        df_active_phase = df_active_phase.resample(self.RESAMPLING_RATE).median()
         #df = pd.concat([df_power_consumption, df_active_phase], axis=1, ignore_index=False)
         #df_power_consumption = df_power_consumption.iloc[:-360] #241920, 51840
         #df_active_phase = df_active_phase.iloc[360:]
