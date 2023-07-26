@@ -33,12 +33,12 @@ from tensorflow.keras.models import Sequential
 
 def start_task():
     global task
-    # task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
-    # task.execute_remotely(queue_name='default', clone=False, exit_process=True)
-    #
-    # # copy custom problog module
-    # os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
-    # f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
+    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
+    task.execute_remotely(queue_name='default', clone=False, exit_process=True)
+
+    # copy custom problog module
+    os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
+    f = open("/root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py", "w")
 
     import LogicalPlausibility
     import TimeSeriesPatternRecognition
@@ -68,6 +68,8 @@ def start_task():
 
     # finetune the model on the plausibility checked facts
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
+    tspr.WINDOW_SIZE = args.window_size
+    tspr.RESAMPLING_RATE = args.resampling_rate
     eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
 
     # save plausibility checked facts as Dataset
@@ -107,6 +109,10 @@ period_end = (datetime.datetime.strptime("2023-12-18 23:59:59", "%Y-%m-%d %H:%M:
 
 parser.add_argument('--experiment_number', type=int, default=0, metavar='N',
                         help='Experiment Number')
+parser.add_argument('--window_size', type=int, default=599, metavar='N',
+                        help='Window Size of Model')
+parser.add_argument('--resampling_rate', type=str, default='2s', metavar='N',
+                        help='Resampling Rate for the Data')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
 # parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
