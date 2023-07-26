@@ -30,7 +30,7 @@ import Utils
 
 class TimeSeriesPatternRecognition():
 
-    WINDOW_SIZE = 599
+    WINDOW_SIZE = 49
 
     def create_model(self):
         model = Sequential()#add model layers
