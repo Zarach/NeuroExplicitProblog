@@ -226,6 +226,9 @@ class TimeSeriesPatternRecognition():
         print(f"Evaluation Metrics: {eval_metrics}")
         evalKettle = pd.DataFrame(modelKettle.predict(test_dataset))
 
+        modelKettle.load_weights(f"{models_path}/model_finetuned_N.h5")
+        eval_metrics_compare_N = modelKettle.evaluate(test_dataset)
+
 
 
         #Microwave
@@ -295,4 +298,4 @@ class TimeSeriesPatternRecognition():
         # plt.show()
         # print('--------------------------------------------------------')
         print('Time Series Pattern Recognition done')
-        return eval_metrics
+        return eval_metrics, eval_metrics_compare_N

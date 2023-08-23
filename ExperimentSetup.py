@@ -100,6 +100,7 @@ def start_task():
     dataset.finalize()
     print("Models uploaded.")
 
+    print(f"Evaluation Metrics not finetuned: {eval_metrics}")
     print(f"Evaluation Metrics: {eval_metrics}")
 
 parser = argparse.ArgumentParser()
@@ -107,11 +108,11 @@ period_start = (datetime.datetime.strptime("2022-12-05 00:00:00", "%Y-%m-%d %H:%
 period_end = (datetime.datetime.strptime("2023-12-18 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
 
 
-parser.add_argument('--experiment_number', type=int, default=0, metavar='N',
+parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
                         help='Experiment Number')
-parser.add_argument('--window_size', type=int, default=599, metavar='N',
+parser.add_argument('--window_size', type=int, default=299, metavar='N',
                         help='Window Size of Model')
-parser.add_argument('--resampling_rate', type=str, default='2s', metavar='N',
+parser.add_argument('--resampling_rate', type=str, default='4s', metavar='N',
                         help='Resampling Rate for the Data')
 # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
 #                         help='Start Date')
