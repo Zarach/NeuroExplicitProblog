@@ -70,7 +70,7 @@ def start_task():
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
     tspr.WINDOW_SIZE = args.window_size
     tspr.RESAMPLING_RATE = args.resampling_rate
-    eval_metrics = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
+    eval_metrics, eval_metrics_compare = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
 
     # save plausibility checked facts as Dataset
     dataset = Dataset.create(
@@ -100,7 +100,7 @@ def start_task():
     dataset.finalize()
     print("Models uploaded.")
 
-    print(f"Evaluation Metrics not finetuned: {eval_metrics}")
+    print(f"Evaluation Metrics not finetuned: {eval_metrics_compare}")
     print(f"Evaluation Metrics: {eval_metrics}")
 
 parser = argparse.ArgumentParser()
