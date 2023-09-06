@@ -148,8 +148,8 @@ class TimeSeriesPatternRecognition():
             lr = 0.0001
         else:
             train_y, test_y = df_active_phase_plausibility.loc[period_start:period_end], df_active_phase.loc[test_period_start:test_period_end]
-            recall_weight = 2.
-            lr = 0.00001
+            recall_weight = 1.
+            lr = 0.00002
         #
         # plt.plot(pd.DataFrame(train_X))
         # plt.plot(pd.DataFrame(train_y))
