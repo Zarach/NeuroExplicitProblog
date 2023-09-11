@@ -46,7 +46,7 @@ class TimeSeriesPatternRecognition():
         #model.add(Dropout(0.4))
         model.add(Flatten())
         model.add(Dense(1024, activation='relu'))
-        #model.add(Dropout(0.5))
+        model.add(Dropout(0.3))
         model.add(Dense(1, activation='sigmoid'))
         return model
 
