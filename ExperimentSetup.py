@@ -167,7 +167,8 @@ if __name__ ==  '__main__':
         function=test2,
         cache_executed_step=True,
     )
-    pipeline_controller.start(queue='default')
+    #pipeline_controller.start(queue='default')
+    pipeline_controller.start_locally()
     #PipelineDecorator.set_default_execution_queue('default')
     #pipeline_logic(299, '4s')
 
