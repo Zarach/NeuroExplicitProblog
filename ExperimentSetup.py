@@ -29,6 +29,14 @@ from tensorflow.keras.models import Sequential
 # # # commit dataset changes
 # dataset.finalize
 
+@PipelineDecorator.component(execution_queue="default")
+def test1():
+    print("test 1")
+
+@PipelineDecorator.component(execution_queue="default")
+def test2():
+    print("test 2")
+
 
 @PipelineDecorator.component(execution_queue="default", return_values=['period_start', 'period_end'])
 def calculate_dates(experiment_number):
@@ -139,8 +147,10 @@ def pipeline_logic(window_size, resampling_rate):
     experiment_number = 1
     #for experiment_number in range(6):
     print(f'Experiment Number {experiment_number} started')
-    period_start, period_end = calculate_dates(experiment_number)
-    start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
+    # period_start, period_end = calculate_dates(experiment_number)
+    # start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
+    test1()
+    test2()
     print(f'Experiment Number {experiment_number} finished')
 
 
