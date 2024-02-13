@@ -146,7 +146,7 @@ def pipeline_logic(window_size, resampling_rate):
 
 if __name__ ==  '__main__':
     #PipelineDecorator.run_locally()
-    PipelineDecorator.set_default_execution_queue('default')
+    #PipelineDecorator.set_default_execution_queue('default')
     pipeline_logic(299, '4s')
 
 
