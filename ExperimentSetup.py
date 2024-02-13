@@ -156,7 +156,7 @@ def pipeline_logic(window_size, resampling_rate):
 
 if __name__ ==  '__main__':
     #PipelineDecorator.run_locally()
-    pipeline_controller = PipelineController()
+    pipeline_controller = PipelineController(name='NeSy Pipeline', project='NeSy')
     pipeline_controller.add_function_step(
         name='step_one',
         function=test1,
