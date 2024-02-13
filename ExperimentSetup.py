@@ -135,11 +135,13 @@ def start_task(experiment_number, period_start, period_end, window_size, resampl
     print(f"Evaluation Metrics: {eval_metrics}")
 
 @PipelineDecorator.pipeline(name='NeSy Pipeline', project='NeSy')
-def main(experiment_number, window_size, resampling_rate):
+def pipeline_logic(experiment_number, window_size, resampling_rate):
     for experiment_number in range(6):
         period_start, period_end = calculate_dates(experiment_number)
         start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
 
+def main():
+    PipelineDecorator.start()
 
 
 
