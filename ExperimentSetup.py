@@ -11,7 +11,7 @@ import time
 import datetime
 
 import roman
-from clearml import Task, Dataset, InputModel, Model
+from clearml import Task, Dataset, InputModel, Model, PipelineDecorator
 from tensorflow.keras.models import Sequential
 
 # dataset = Dataset.create(
@@ -30,10 +30,41 @@ from tensorflow.keras.models import Sequential
 # dataset.finalize
 
 
+@PipelineDecorator.component(execution_queue="default", return_values=['period_start', 'period_end'])
+def calculate_dates(experiment_number):
 
-def start_task():
+    # parser = argparse.ArgumentParser()
+    # normalerweise der 05. wurde umgestellt um wochentraining auszutesten.
+    period_start = (datetime.datetime.strptime("2022-12-12 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime(
+        "%Y-%m-%d %H:%M:%S")
+    period_end = (datetime.datetime.strptime("2023-12-18 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
+
+    # parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
+    #                     help='Experiment Number')
+    # parser.add_argument('--window_size', type=int, default=299, metavar='N',
+    #                     help='Window Size of Model')
+    # parser.add_argument('--resampling_rate', type=str, default='4s', metavar='N',
+    #                     help='Resampling Rate for the Data')
+    # parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
+    #                         help='Start Date')
+    # parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
+    #                         help='End Date')
+
+    # args = parser.parse_args()
+
+    for i in range(experiment_number):
+        print(f'experiment {i}')
+        period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+            days=7)).strftime("%Y-%m-%d %H:%M:%S")
+        period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+            days=7)).strftime("%Y-%m-%d %H:%M:%S")
+
+    return period_start, period_end
+
+@PipelineDecorator.component(execution_queue="default")
+def start_task(experiment_number, period_start, period_end, window_size, resampling_rate):
     global task
-    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {args.experiment_number}')
+    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {experiment_number}')
     task.execute_remotely(queue_name='default', clone=False, exit_process=True)
 
     # copy custom problog module
@@ -57,9 +88,9 @@ def start_task():
     models_path = models.get_mutable_local_copy("Models/", True)
 
     # do a plausibility check for experiment_number-1 NN-Results
-    if args.experiment_number > 0:
+    if experiment_number > 0:
         lp = LogicalPlausibility.LogicalPlausibility()
-        lp.check_plausibility(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
+        lp.check_plausibility(experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path)
         load = True
         finetune = True
     else:
@@ -68,9 +99,9 @@ def start_task():
 
     # finetune the model on the plausibility checked facts
     tspr = TimeSeriesPatternRecognition.TimeSeriesPatternRecognition()
-    tspr.WINDOW_SIZE = args.window_size
-    tspr.RESAMPLING_RATE = args.resampling_rate
-    eval_metrics, eval_metrics_compare = tspr.run(args.experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
+    tspr.WINDOW_SIZE = window_size
+    tspr.RESAMPLING_RATE = resampling_rate
+    eval_metrics, eval_metrics_compare = tspr.run(experiment_number, period_start, period_end, dataset_path_databases, dataset_path_results, models_path, load, finetune) #model_path)
 
     # save plausibility checked facts as Dataset
     dataset = Dataset.create(
@@ -103,34 +134,11 @@ def start_task():
     print(f"Evaluation Metrics not finetuned: {eval_metrics_compare}")
     print(f"Evaluation Metrics: {eval_metrics}")
 
-parser = argparse.ArgumentParser()
-period_start = (datetime.datetime.strptime("2022-12-05 00:00:00", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
-period_end = (datetime.datetime.strptime("2023-12-18 23:59:59", "%Y-%m-%d %H:%M:%S")).strftime("%Y-%m-%d %H:%M:%S")
-
-
-parser.add_argument('--experiment_number', type=int, default=1, metavar='N',
-                        help='Experiment Number')
-parser.add_argument('--window_size', type=int, default=299, metavar='N',
-                        help='Window Size of Model')
-parser.add_argument('--resampling_rate', type=str, default='4s', metavar='N',
-                        help='Resampling Rate for the Data')
-# parser.add_argument('--period_start', type=str, default=period_start, metavar='N',
-#                         help='Start Date')
-# parser.add_argument('--period_end', type=str, default=period_end, metavar='N',
-#                         help='End Date')
-
-args = parser.parse_args()
-
-# Claculate periods by experiment number
-
-for i in range(args.experiment_number):
-    print(f'experiment {i}')
-    period_start = (datetime.datetime.strptime(period_start, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-        days=14)).strftime("%Y-%m-%d %H:%M:%S")
-    period_end = (datetime.datetime.strptime(period_end, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-        days=14)).strftime("%Y-%m-%d %H:%M:%S")
-
-start_task()
+@PipelineDecorator.pipeline(name='NeSy Pipeline', project='NeSy')
+def main(experiment_number, window_size, resampling_rate):
+    for experiment_number in range(6):
+        period_start, period_end = calculate_dates(experiment_number)
+        start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
 
 
 
