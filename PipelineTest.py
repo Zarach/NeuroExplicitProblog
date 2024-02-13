@@ -7,8 +7,8 @@ def main():
         project="examples",
         version="0.0.0",
         auto_version_bump=True,
-        abort_on_failure = True,
-        repo = 'https://github.com/Zarach/NeuroExplicitProblog.git'
+        # abort_on_failure = True,
+        # repo = 'https://github.com/Zarach/NeuroExplicitProblog.git'
     )
 
     pipe.add_function_step(
@@ -26,8 +26,8 @@ def main():
         function_return=["incremented_number"],
         cache_executed_step=True,
     )
-
-    pipe.start_locally(run_pipeline_steps_locally=True)
+    pipe.set_default_execution_queue("default")
+    pipe.start(queue="default")
 
 
 def increment(i: int = 0, limit: int = 2) -> int:
