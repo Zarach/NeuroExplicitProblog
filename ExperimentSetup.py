@@ -140,8 +140,8 @@ def pipeline_logic(experiment_number, window_size, resampling_rate):
         period_start, period_end = calculate_dates(experiment_number)
         start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
 
-def main():
-    PipelineDecorator.start()
+if __name__ ==  '__main__':
+    PipelineDecorator.set_default_execution_queue('default')
 
 
 
