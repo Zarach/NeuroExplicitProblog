@@ -137,9 +137,11 @@ def start_task(experiment_number, period_start, period_end, window_size, resampl
 @PipelineDecorator.pipeline(name='NeSy Pipeline', project='NeSy')
 def pipeline_logic(window_size, resampling_rate):
     for experiment_number in range(6):
+        print(f'Experiment Number {experiment_number} started')
         period_start, period_end = calculate_dates(experiment_number)
         start_task(experiment_number, period_start, period_end, window_size, resampling_rate)
-        print(f'Experiment Number {experiment_number}')
+        print(f'Experiment Number {experiment_number} finished')
+
 
 if __name__ ==  '__main__':
     #PipelineDecorator.run_locally()
