@@ -1,28 +1,41 @@
 from clearml import PipelineController
 
 
-def test1():
-    print("test 1")
-    return 'test1'
-
-#@PipelineDecorator.component(execution_queue="default")
-def test2():
-    print("test 2")
-    return 'test2'
-
-if __name__ ==  '__main__':
-    pipeline_controller = PipelineController(name='NeSy Pipeline', project='NeSy', abort_on_failure=True, repo='https://github.com/Zarach/NeuroExplicitProblog.git')
-    pipeline_controller.add_function_step(
-        name='step_one',
-        function=test1,
-        function_return=['test1_ret'],
-        cache_executed_step=True
+def main():
+    pipe = PipelineController(
+        name="Pipeline Controller",
+        project="examples",
+        version="0.0.0",
+        auto_version_bump=True,
     )
-    pipeline_controller.add_function_step(
-        name='step_two',
-        function=test2,
-        function_return=['test2_ret'],
-        cache_executed_step=True
+
+    pipe.add_function_step(
+        name="increment_step_1",
+        function=increment,
+        function_return=["incremented_number"],
+        cache_executed_step=True,
     )
-    pipeline_controller.start(queue='default')
-    #pipeline_controller.start_locally()
+
+    pipe.add_function_step(
+        name="increment_step_2",
+        parents=["increment_step_1"],
+        function=increment,
+        function_kwargs=dict(i="${increment_step_1.incremented_number}"),
+        function_return=["incremented_number"],
+        cache_executed_step=True,
+    )
+
+    pipe.start_locally(run_pipeline_steps_locally=True)
+
+
+def increment(i: int = 0, limit: int = 2) -> int:
+    if i < limit:
+        print(f"incrementing from {i} of {i+1}")
+        return i + 1
+    else:
+        print("limit reached")
+        return i
+
+
+if __name__ == "__main__":
+    main()
