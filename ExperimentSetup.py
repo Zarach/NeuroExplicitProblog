@@ -11,7 +11,7 @@ import time
 import datetime
 
 import roman
-from clearml import Task, Dataset, InputModel, Model, PipelineDecorator
+from clearml import Task, Dataset, InputModel, Model, PipelineDecorator, PipelineController
 from tensorflow.keras.models import Sequential
 
 # dataset = Dataset.create(
@@ -29,16 +29,16 @@ from tensorflow.keras.models import Sequential
 # # # commit dataset changes
 # dataset.finalize
 
-@PipelineDecorator.component(execution_queue="default")
+#@PipelineDecorator.component(execution_queue="default")
 def test1():
     print("test 1")
 
-@PipelineDecorator.component(execution_queue="default")
+#@PipelineDecorator.component(execution_queue="default")
 def test2():
     print("test 2")
 
 
-@PipelineDecorator.component(execution_queue="default", return_values=['period_start', 'period_end'])
+#@PipelineDecorator.component(execution_queue="default", return_values=['period_start', 'period_end'])
 def calculate_dates(experiment_number):
 
     # parser = argparse.ArgumentParser()
@@ -69,7 +69,7 @@ def calculate_dates(experiment_number):
 
     return period_start, period_end
 
-@PipelineDecorator.component(execution_queue="default")
+#@PipelineDecorator.component(execution_queue="default")
 def start_task(experiment_number, period_start, period_end, window_size, resampling_rate):
     # global task
     # task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {experiment_number}')
@@ -142,7 +142,7 @@ def start_task(experiment_number, period_start, period_end, window_size, resampl
     print(f"Evaluation Metrics not finetuned: {eval_metrics_compare}")
     print(f"Evaluation Metrics: {eval_metrics}")
 
-@PipelineDecorator.pipeline(name='NeSy Pipeline', project='NeSy')
+#@PipelineDecorator.pipeline(name='NeSy Pipeline', project='NeSy')
 def pipeline_logic(window_size, resampling_rate):
     experiment_number = 1
     #for experiment_number in range(6):
@@ -156,8 +156,19 @@ def pipeline_logic(window_size, resampling_rate):
 
 if __name__ ==  '__main__':
     #PipelineDecorator.run_locally()
+    pipeline_controller = PipelineController()
+    pipeline_controller.add_function_step(
+        name='step_one',
+        function=test1,
+        cache_executed_step=True,
+    )
+    pipeline_controller.add_function_step(
+        name='step_two',
+        function=test2,
+        cache_executed_step=True,
+    )
     #PipelineDecorator.set_default_execution_queue('default')
-    pipeline_logic(299, '4s')
+    #pipeline_logic(299, '4s')
 
 
 
