@@ -63,9 +63,9 @@ def calculate_dates(experiment_number):
 
 @PipelineDecorator.component(execution_queue="default")
 def start_task(experiment_number, period_start, period_end, window_size, resampling_rate):
-    global task
-    task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {experiment_number}')
-    task.execute_remotely(queue_name='default', clone=False, exit_process=True)
+    # global task
+    # task = Task.init(project_name='NeSy', task_name=f'Experiment Test (Neurosymbolic) {experiment_number}')
+    # task.execute_remotely(queue_name='default', clone=False, exit_process=True)
 
     # copy custom problog module
     os.popen('cp ProblogAddons/bedu.py /root/.clearml/venvs-builds/3.10/lib/python3.10/site-packages/problog/library/bedu.py')
